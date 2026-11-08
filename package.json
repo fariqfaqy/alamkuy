@@ -1,0 +1,22 @@
+{
+  "name": "alamkuy",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "google-antigravity": "file:../../AppData/Local/Programs/Antigravity IDE/resources/app/extensions/agy",
+    "lucide-react": "^0.460.0",
+    "motion": "^14.10.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "vite": "^5.4.10"
+  }
+}

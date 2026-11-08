@@ -1,0 +1,416 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  motion,
+  AnimatePresence
+} from 'motion/react';
+import {
+  Globe2,
+  Search,
+  Bookmark,
+  Menu,
+  X,
+  Sparkles,
+  MapPin,
+  HeartHandshake,
+  Compass
+} from 'lucide-react';
+import {
+  HERO_SLIDES,
+  SPECIES_DATA,
+  NATIONAL_PARKS,
+  DONATION_CAMPAIGNS,
+  INITIAL_DONORS
+} from './data/conservationData';
+import HeroSlider from './components/HeroSlider';
+import SpeciesFanDeck from './components/SpeciesFanDeck';
+import ParkJournalBook from './components/ParkJournalBook';
+import DonationPage from './components/DonationPage';
+import OrigamiFaunaLayer from './components/OrigamiFaunaLayer';
+
+const EXPO_EASE = [0.16, 1, 0.3, 1];
+
+export default function App() {
+  const [activeNav, setActiveNav] = useState('beranda');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [bookmarkedIds, setBookmarkedIds] = useState(['ujung-kulon', 'gunung-leuser']);
+  const [selectedParkRegion, setSelectedParkRegion] = useState('Semua');
+  const [speciesCategory, setSpeciesCategory] = useState('Semua');
+  const [selectedSlideModal, setSelectedSlideModal] = useState(null);
+
+  const [campaigns, setCampaigns] = useState(DONATION_CAMPAIGNS);
+  const [selectedCampaignId, setSelectedCampaignId] = useState(DONATION_CAMPAIGNS[0].id);
+  const [donors, setDonors] = useState(INITIAL_DONORS);
+
+  const toggleBookmark = (id) => {
+    setBookmarkedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  // Automatic section tracking & smooth scroll-focus per session
+  useEffect(() => {
+    const sections = [
+      { id: 'section-beranda', key: 'beranda' },
+      { id: 'section-flora-fauna', key: 'spesies' },
+      { id: 'section-taman-nasional', key: 'taman' },
+      { id: 'section-donasi', key: 'donasi' }
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+            const match = sections.find((s) => s.id === entry.target.id);
+            if (match) {
+              setActiveNav(match.key);
+            }
+          }
+        });
+      },
+      { threshold: [0.4, 0.65] }
+    );
+
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    // Smooth magnetic scroll focus when user stops scrolling near a section top
+    let scrollTimeout = null;
+    const handleScrollEnd = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const vh = window.innerHeight;
+        for (const { id } of sections) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          // If section top is within 28% of viewport top, smoothly focus it
+          if (Math.abs(rect.top) > 8 && Math.abs(rect.top) < vh * 0.28) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            break;
+          }
+        }
+      }, 140);
+    };
+
+    window.addEventListener('scroll', handleScrollEnd, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScrollEnd);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+    };
+  }, []);
+
+  const scrollToSection = (sectionId, navKey) => {
+    setActiveNav(navKey);
+    setMobileMenuOpen(false);
+    if (sectionId === 'top' || sectionId === 'section-beranda') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleDonateForCampaign = (campaignId) => {
+    if (campaignId) {
+      setSelectedCampaignId(campaignId);
+    }
+    setSelectedSlideModal(null);
+    scrollToSection('section-donasi', 'donasi');
+  };
+
+  const handleDonationSubmit = ({ campaignId, amount, donor }) => {
+    setCampaigns((prev) =>
+      prev.map((c) =>
+        c.id === campaignId
+          ? {
+              ...c,
+              collectedAmount: c.collectedAmount + amount,
+              donorsCount: c.donorsCount + 1
+            }
+          : c
+      )
+    );
+    setDonors((prev) => [donor, ...prev]);
+  };
+
+  const filteredParks = useMemo(() => {
+    if (selectedParkRegion === 'Semua') return NATIONAL_PARKS;
+    return NATIONAL_PARKS.filter((p) => p.region === selectedParkRegion);
+  }, [selectedParkRegion]);
+
+  const navItems = [
+    { key: 'beranda', label: 'BERANDA', target: 'section-beranda' },
+    { key: 'spesies', label: 'FLORA & FAUNA', target: 'section-flora-fauna' },
+    { key: 'taman', label: 'TAMAN NASIONAL', target: 'section-taman-nasional' }
+  ];
+
+  const isLightNavbar = activeNav !== 'beranda';
+
+  return (
+    <div className="app-shell">
+      {/* Top Navbar */}
+      <header className={`top-navbar ${isLightNavbar ? 'navbar-light-mode' : ''}`}>
+        <div className="navbar-inner">
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            className="brand-logo"
+            onClick={() => scrollToSection('section-beranda', 'beranda')}
+          >
+            <span className="brand-icon-circle">
+              <Globe2 size={18} />
+            </span>
+            <span className="brand-text">NUSANTARA WILD</span>
+          </motion.button>
+
+          <nav className="desktop-nav-links" aria-label="Navigasi Utama">
+            {navItems.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => scrollToSection(item.target, item.key)}
+                className={`nav-link-btn ${activeNav === item.key ? 'active' : ''}`}
+              >
+                {item.label}
+                {activeNav === item.key && (
+                  <motion.span
+                    layoutId="navUnderline"
+                    className="nav-motion-underline"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </button>
+            ))}
+
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.05, y: -1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => scrollToSection('section-donasi', 'donasi')}
+              className={`nav-link-btn nav-link-highlight ${
+                activeNav === 'donasi' ? 'active' : ''
+              }`}
+            >
+              DONASI AKSI
+            </motion.button>
+          </nav>
+
+          <div className="navbar-actions">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              className="navbar-icon-btn"
+              onClick={() => scrollToSection('section-flora-fauna', 'spesies')}
+              title="Jelajahi Kartu Flora & Fauna"
+              aria-label="Jelajahi Kartu Flora & Fauna"
+            >
+              <Search size={17} />
+            </motion.button>
+
+            <motion.button
+              type="button"
+              key={bookmarkedIds.length}
+              initial={{ scale: 0.85 }}
+              animate={{ scale: 1 }}
+              className="navbar-bookmark-pill"
+              onClick={() => scrollToSection('section-taman-nasional', 'taman')}
+            >
+              <Bookmark size={14} />
+              <span>{bookmarkedIds.length}</span>
+            </motion.button>
+
+            <button
+              type="button"
+              className="mobile-menu-btn"
+              onClick={() => setMobileMenuOpen((o) => !o)}
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
+            </button>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mobile-nav-drawer"
+            >
+              <button
+                type="button"
+                onClick={() => scrollToSection('section-beranda', 'beranda')}
+                className="mobile-nav-item"
+              >
+                Beranda
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection('section-flora-fauna', 'spesies')}
+                className="mobile-nav-item"
+              >
+                Flora & Fauna
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection('section-taman-nasional', 'taman')}
+                className="mobile-nav-item"
+              >
+                Taman Nasional
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection('section-donasi', 'donasi')}
+                className="mobile-nav-item mobile-nav-cta"
+              >
+                Donasi Aksi
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      {/* Layer Origami Fauna Bergerak di Berbagai Titik Halaman */}
+      <OrigamiFaunaLayer />
+
+      {/* Sesi 1: Hero Slider Interaktif */}
+      <div id="section-beranda" className="snap-section">
+        <HeroSlider
+          slides={HERO_SLIDES}
+          bookmarkedIds={bookmarkedIds}
+          onToggleBookmark={toggleBookmark}
+          onExploreSlide={(slide) => setSelectedSlideModal(slide)}
+          onDonateSlide={(campId) => handleDonateForCampaign(campId)}
+        />
+      </div>
+
+      {/* Sesi 2: Kartu Flora & Fauna Model Kipas Interaktif (Tanpa Teks di Bawah Kartu) */}
+      <SpeciesFanDeck
+        speciesList={SPECIES_DATA}
+        selectedCategory={speciesCategory}
+        onSelectCategory={setSpeciesCategory}
+        onDonateSpecies={(campId) => handleDonateForCampaign(campId)}
+      />
+
+      {/* Sesi 3: Profil Taman Nasional Model Jurnal Buku Interaktif */}
+      <ParkJournalBook
+        parks={NATIONAL_PARKS}
+        onDonatePark={(campId) => handleDonateForCampaign(campId)}
+      />
+
+      {/* Sesi 4: Halaman Donasi Interaktif */}
+      <div className="snap-section">
+        <DonationPage
+          campaigns={campaigns}
+          selectedCampaignId={selectedCampaignId}
+          onSelectCampaign={setSelectedCampaignId}
+          donors={donors}
+          onSubmitDonation={handleDonationSubmit}
+        />
+      </div>
+
+      {/* Footer Singkat */}
+      <footer className="site-footer">
+        <div className="section-container footer-row">
+          <div className="brand-logo footer-brand">
+            <span className="brand-icon-circle">
+              <Globe2 size={16} />
+            </span>
+            <span className="brand-text">NUSANTARA WILD</span>
+          </div>
+          <p className="footer-note">
+            Data mengacu pada KLHK, IUCN Red List, UNESCO, dan BRIN.
+          </p>
+        </div>
+      </footer>
+
+      {/* Modal Ringkas */}
+      <AnimatePresence>
+        {selectedSlideModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="modal-backdrop"
+            onClick={() => setSelectedSlideModal(null)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+              className="modal-card"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setSelectedSlideModal(null)}
+                aria-label="Tutup"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="modal-hero-img">
+                <img src={selectedSlideModal.image} alt={selectedSlideModal.title} />
+                <div className="modal-hero-caption">
+                  <span className="modal-badge">{selectedSlideModal.unesco}</span>
+                  <h2>{selectedSlideModal.title}</h2>
+                  <p>{selectedSlideModal.subtitle}</p>
+                </div>
+              </div>
+
+              <div className="modal-body">
+                <div className="modal-stats-row">
+                  <div className="modal-stat-box">
+                    <span>Status</span>
+                    <strong>{selectedSlideModal.iucnBadge}</strong>
+                  </div>
+                  <div className="modal-stat-box">
+                    <span>Populasi</span>
+                    <strong>{selectedSlideModal.populationStat}</strong>
+                  </div>
+                  <div className="modal-stat-box">
+                    <span>Luas</span>
+                    <strong>{selectedSlideModal.areaStat}</strong>
+                  </div>
+                </div>
+
+                <ul className="modal-highlights-list">
+                  {selectedSlideModal.highlights.map((h) => (
+                    <li key={h}>
+                      <Sparkles size={15} />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="modal-actions">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => handleDonateForCampaign(selectedSlideModal.campaignId)}
+                  >
+                    <HeartHandshake size={17} />
+                    <span>Donasi Kawasan Ini</span>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

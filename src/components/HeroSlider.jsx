@@ -7,7 +7,12 @@ import {
 import {
   Bookmark,
   Compass,
-  HeartHandshake
+  HeartHandshake,
+  Activity,
+  Globe2,
+  Flame,
+  Droplets,
+  Wind
 } from 'lucide-react';
 
 const EXPO_EASE = [0.16, 1, 0.3, 1];
@@ -129,6 +134,49 @@ export default function HeroSlider({
             transition={{ duration: 7.5, ease: 'easeOut' }}
           />
           <div className="hero-bg-scrim" />
+        </motion.div>
+
+        {/* Global Eco-Telemetry Live Ribbon (Radar Krisis Iklim Global) */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.6 }}
+          className="hero-telemetry-ribbon"
+        >
+          <div className="telemetry-live-badge">
+            <span className="telemetry-pulse-dot" />
+            <span className="telemetry-badge-text">RADAR IKLIM GLOBAL</span>
+          </div>
+
+          <div className="telemetry-items-wrap">
+            <div className="telemetry-item">
+              <span className="telemetry-label">
+                <Wind size={12} /> CO2 Atmosfer
+              </span>
+              <span className="telemetry-val val-danger">424.8 ppm</span>
+            </div>
+            <div className="telemetry-divider" />
+            <div className="telemetry-item">
+              <span className="telemetry-label">
+                <Flame size={12} /> Suhu Global
+              </span>
+              <span className="telemetry-val val-warning">+1.28°C</span>
+            </div>
+            <div className="telemetry-divider" />
+            <div className="telemetry-item">
+              <span className="telemetry-label">
+                <Globe2 size={12} /> Hutan Tropis
+              </span>
+              <span className="telemetry-val">-3.7 Juta Ha/Thn</span>
+            </div>
+            <div className="telemetry-divider" />
+            <div className="telemetry-item">
+              <span className="telemetry-label">
+                <Droplets size={12} /> Plastik Laut
+              </span>
+              <span className="telemetry-val">11 Juta Ton/Thn</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* Foreground Content Split */}

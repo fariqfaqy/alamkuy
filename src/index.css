@@ -281,6 +281,127 @@ textarea {
     linear-gradient(180deg, rgba(12, 31, 22, 0.2) 0%, rgba(12, 31, 22, 0.66) 100%);
 }
 
+/* Hero Telemetry Live Ribbon (Radar Krisis Iklim Global) */
+.hero-telemetry-ribbon {
+  position: absolute;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  width: calc(100% - 72px);
+  max-width: 1420px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(10, 26, 18, 0.76);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+}
+
+.telemetry-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  flex-shrink: 0;
+}
+
+.telemetry-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: pulseDot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.telemetry-badge-text {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fca5a5;
+  text-transform: uppercase;
+}
+
+.telemetry-items-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.telemetry-items-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.telemetry-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.telemetry-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.telemetry-val {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.telemetry-val.val-danger {
+  color: #f87171;
+}
+
+.telemetry-val.val-warning {
+  color: #fde047;
+}
+
+.telemetry-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .hero-telemetry-ribbon {
+    top: 68px;
+    width: calc(100% - 32px);
+    padding: 6px 12px;
+  }
+  .telemetry-badge-text {
+    font-size: 0.62rem;
+  }
+  .telemetry-label {
+    font-size: 0.66rem;
+  }
+  .telemetry-val {
+    font-size: 0.72rem;
+  }
+}
+
 .hero-content-grid {
   position: relative;
   z-index: 10;
@@ -2383,58 +2504,71 @@ html {
   transform-origin: center center;
 }
 
-/* LAYER 1: Underlying Left & Right Book Slides (Strictly painted BEHIND .real-book-core) */
-.underlying-book-slides-layer {
+/* REALISTIC BOOK CASING & PAPER STACK THICKNESS BEVEL */
+.realistic-book-casing {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: auto;
+  inset: -8px -14px -10px -14px;
+  border-radius: 12px 28px 28px 12px;
+  background: linear-gradient(145deg, #12281e 0%, #081610 100%);
+  box-shadow: 
+    0 35px 80px rgba(8, 22, 16, 0.48),
+    0 12px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  z-index: 5;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* LAYER 2: Active 2-Page 3D Book Spread (Strictly painted IN FRONT of .underlying-book-slides-layer) */
+/* Paper Stack Edge: Authentic multi-sheet layered paper block */
+.paper-stack-edge {
+  position: absolute;
+  top: 6px;
+  bottom: 8px;
+  width: 16px;
+  z-index: 8;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    180deg,
+    #f4f1ea 0px,
+    #f4f1ea 2px,
+    #ded9cd 3px,
+    #ded9cd 4px
+  );
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.stack-edge-left {
+  left: 2px;
+  border-radius: 6px 0 0 6px;
+  border-left: 2px solid #ccc6b8;
+}
+
+.stack-edge-left.closed-stack {
+  opacity: 0;
+  transform: translateX(12px);
+}
+
+.stack-edge-left.open-stack {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stack-edge-right {
+  right: 2px;
+  border-radius: 0 6px 6px 0;
+  border-right: 2px solid #ccc6b8;
+}
+
+/* Active 2-Page 3D Book Spread */
 .real-book-core {
   position: relative;
   z-index: 20;
   width: 760px;
   height: 456px;
   flex-shrink: 0;
-  perspective: 2200px;
+  perspective: 2500px;
   transform-style: preserve-3d;
-}
-
-.underlying-book-leaf {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  cursor: pointer;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 22px 44px rgba(15, 32, 24, 0.25);
-  transition: filter 0.25s ease;
-}
-
-.underlying-book-leaf:hover {
-  filter: brightness(1.08);
-}
-
-.underlying-left-leaf {
-  left: 0;
-  transform-origin: right center;
-}
-
-.underlying-right-leaf {
-  left: 50%;
-  transform-origin: left center;
-}
-
-.underlying-leaf-dimmer {
-  position: absolute;
-  inset: 0;
-  background: #091510;
-  pointer-events: none;
-  z-index: 12;
-  border-radius: inherit;
 }
 
 /* RIGHT BASE BOARD (Active Right Page: 50% width, anchored at left: 50%) */
@@ -2691,7 +2825,7 @@ html {
   z-index: 5;
 }
 
-/* REAL DOUBLE-SIDED 3D TURNING SHEET */
+/* REALISTIC PAPER SLIDE / PEEL TURNING SHEET */
 .real-double-sided-sheet {
   position: absolute;
   top: 0;
@@ -2702,6 +2836,11 @@ html {
   transform-origin: left center;
   transform-style: preserve-3d;
   pointer-events: none;
+  will-change: transform;
+}
+
+.paper-curl-physics {
+  filter: drop-shadow(-14px 18px 30px rgba(0, 0, 0, 0.48));
 }
 
 .sheet-face {
@@ -2710,24 +2849,42 @@ html {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
 }
 
 .sheet-front {
-  border-radius: 0 24px 24px 0;
+  border-radius: 0 20px 20px 0;
 }
 
 .sheet-back {
   transform: rotateY(180deg);
-  border-radius: 24px 0 0 24px;
+  border-radius: 20px 0 0 20px;
 }
 
+/* Sweeping Dynamic Lighting & Paper Sheen */
 .sheet-dynamic-lighting {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.65), rgba(255, 255, 255, 0.15));
   pointer-events: none;
   z-index: 10;
+  border-radius: inherit;
+}
+
+.sheet-front-sheen {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(255, 255, 255, 0.28) 35%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
+.sheet-back-shadow {
+  background: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(255, 255, 255, 0.25) 40%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
 }
 
 .real-center-spine {
@@ -2844,43 +3001,68 @@ html {
   margin: 4px 0 12px;
 }
 
-.journal-torn-note {
-  background: #fef9c3;
-  color: #1e293b;
-  padding: 12px 14px;
-  border-radius: 4px 14px 6px 12px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
-  transform: rotate(-1.5deg);
-  border-left: 4px solid #eab308;
+.journal-global-krisis-box {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  padding: 8px 11px;
+  border-left: 3px solid #ef4444;
+  margin-bottom: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
-.torn-note-title {
-  display: block;
-  font-size: 0.65rem;
+.krisis-badge-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.64rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
-  color: #854d0e;
-  margin-bottom: 3px;
+  letter-spacing: 0.08em;
+  color: #f87171;
+  text-transform: uppercase;
+  margin-bottom: 2px;
 }
 
-.journal-torn-note p {
-  font-size: 0.76rem;
-  line-height: 1.42;
+.krisis-metric-tag {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.krisis-impact-desc {
+  font-size: 0.70rem;
+  line-height: 1.32;
+  color: #cbd5e1;
+}
+
+.journal-field-note-card {
+  background: rgba(254, 249, 195, 0.95);
+  color: #1e293b;
+  padding: 8px 11px;
+  border-radius: 6px;
+  border-left: 3px solid #eab308;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.journal-field-note-card p {
+  font-size: 0.70rem;
+  line-height: 1.34;
   font-weight: 600;
   color: #334155;
 }
 
-/* Right Page: Tilted Polaroid Collage */
+/* Right Page: Tilted Polaroid Collage & Edu Action Box */
 .spread-right-page {
   flex-direction: column;
   justify-content: space-between;
-  padding-left: 30px;
+  padding-left: 24px;
 }
 
 .polaroid-collage {
   position: relative;
   width: 100%;
-  height: 310px;
+  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2888,42 +3070,42 @@ html {
 
 .journal-polaroid {
   position: absolute;
-  width: 168px;
+  width: 154px;
   background: #fdfbf7;
-  padding: 9px 9px 24px;
-  border-radius: 6px;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.36);
+  padding: 8px 8px 18px;
+  border-radius: 5px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.36);
   transition: transform 0.3s ease;
 }
 
 .polaroid-1 {
-  top: 8px;
-  right: 16px;
-  transform: rotate(9deg);
+  top: 4px;
+  right: 14px;
+  transform: rotate(8deg);
   z-index: 2;
 }
 
 .polaroid-2 {
-  bottom: 6px;
-  left: 22px;
-  transform: rotate(-7deg);
+  bottom: 4px;
+  left: 18px;
+  transform: rotate(-6deg);
   z-index: 3;
 }
 
 .spread-right-page:hover .polaroid-1 {
-  transform: rotate(12deg) translateY(-4px);
+  transform: rotate(11deg) translateY(-4px);
 }
 
 .spread-right-page:hover .polaroid-2 {
-  transform: rotate(-4deg) translateY(-4px);
+  transform: rotate(-3deg) translateY(-4px);
 }
 
 .polaroid-img-box {
   width: 100%;
-  height: 132px;
+  height: 112px;
   overflow: hidden;
   border-radius: 3px;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
 
 .polaroid-img-box img {
@@ -2935,44 +3117,125 @@ html {
 .polaroid-caption {
   display: block;
   text-align: center;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 800;
   color: #1e293b;
 }
 
-.right-page-footer {
+/* Modul Edukasi Ekologi (Halaman Kanan) */
+.journal-edu-module-box {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+  gap: 6px;
+  width: 100%;
+}
+
+.edu-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(22, 163, 74, 0.88);
+  color: #ffffff;
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.edu-action-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(8px);
+  padding: 6px 9px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.edu-icon {
+  color: #facc15;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.edu-action-text {
+  font-size: 0.69rem;
+  line-height: 1.32;
+  color: #f1f5f9;
+  font-weight: 500;
 }
 
 .journal-species-chips {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 6px;
+  gap: 5px;
 }
 
 .journal-sp-chip {
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.68);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
+}
+
+.right-bottom-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
 }
 
 .journal-eco-label {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.75rem;
+  gap: 4px;
+  font-size: 0.72rem;
   font-weight: 700;
   color: #fef08a;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.journal-page-donate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-green);
+  color: #ffffff;
+  font-size: 0.70rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(22, 163, 74, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.journal-page-donate-btn:hover {
+  transform: scale(1.05);
+  background: #15803d;
+}
+
+/* Header Pill */
+.journal-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-green-soft);
+  color: var(--accent-green);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
 }
 
 /* Bottom Circular Control Dock + Pill Toggle Button */

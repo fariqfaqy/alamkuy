@@ -35,7 +35,7 @@ const EXPO_EASE = [0.16, 1, 0.3, 1];
 export default function App() {
   const [activeNav, setActiveNav] = useState('beranda');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [bookmarkedIds, setBookmarkedIds] = useState(['krisis-iklim', 'deforestasi-tropis']);
+  const [bookmarkedIds, setBookmarkedIds] = useState(['krisis-suhu-kutub', 'koridor-rimba-tropis']);
   const [selectedParkRegion, setSelectedParkRegion] = useState('Semua');
   const [speciesCategory, setSpeciesCategory] = useState('Semua');
   const [selectedSlideModal, setSelectedSlideModal] = useState(null);

@@ -23,69 +23,69 @@ import {
 const PARK_JOURNAL_EXTRAS = {
   'tn-ujung-kulon': {
     globalIssue: {
-      tag: 'KRISIS IKLIM & KENAIKAN LAUT',
+      tag: 'STASIUN KERENTANAN PESISIR',
       metric: '+4.2 mm/thn Kenaikan Laut Global',
       impact:
-        'Kenaikan air laut dan abrasi mengikis dataran rendah semenanjung, mengancam rumah terakhir Badak Jawa.'
+        'Kenaikan air laut dan abrasi mengikis dataran rendah semenanjung, menuntut restorasi sabuk cemara dan mangrove alami.'
     },
-    handwriting: 'Menyusuri semenanjung terluar Banten, benteng terakhir Badak Jawa...',
+    handwriting: 'Menyusuri semenanjung terluar Banten, benteng pesisir terakhir Badak Jawa...',
     fieldNote:
-      'Populasi Rhinoceros sondaicus kini tersisa 76 sampai 82 individu di alam liar. Hutan pantai Ujung Kulon dijaga penuh 24 jam oleh Rhino Protection Unit.',
-    ecoRole: 'Spesies Kunci & Penyebar Biji Hutan Dataran Rendah',
+      'Stasiun riset pesisir barat Jawa. Hutan pantai Ujung Kulon dijaga penuh 24 jam oleh Rhino Protection Unit dan tim monitoring telemetry kamera jebak.',
+    ecoRole: 'Spesies Kunci & Bio-Penjaga Ekosistem Hutan Pantai',
     eduAction:
-      'Pelajari pemulihan tanaman pakan alami dari invasi palem Langkap dan hemat konsumsi kertas.',
+      'Pelajari pemulihan petak pakan alami dari gulma palem Langkap dan hemat konsumsi kertas.',
     polaroids: [
       {
-        img: 'https://images.unsplash.com/photo-1598894000396-bc30e0996899?auto=format&fit=crop&w=600&q=80',
-        caption: 'Badak Jawa (Kritis CR)'
+        img: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=600&q=80',
+        caption: 'Jejak Satwa Pantai'
       },
       {
-        img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+        img: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=600&q=80',
         caption: 'Pesisir Ujung Kulon'
       }
     ],
     filmStrip: [
-      'https://images.unsplash.com/photo-1598894000396-bc30e0996899?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=75'
+      'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&fit=crop&w=400&q=75'
     ],
-    campaignId: 'camp-ujung-kulon'
+    campaignId: 'camp-koridor-hayati'
   },
   'tn-gunung-leuser': {
     globalIssue: {
-      tag: 'DEFORESTASI & KORIDOR TERPUTUS',
-      metric: '3.7 Juta Ha Hutan Tropis Hilang/Thn',
+      tag: 'LABORATORIUM KORIDOR RIMBA',
+      metric: '3.7 Juta Ha Deforestasi Tropis Global',
       impact:
-        'Fragmentasi habitat memicu perjumpaan berbahaya satwa dengan pemukiman dan memudahkan akses jerat pemburu.'
+        'Fragmentasi habitat memicu perjumpaan berbahaya satwa dengan pemukiman dan memudahkan akses jerat pemburu ilegal.'
     },
-    handwriting: 'Kabut fajar di kanopi Leuser, laboratorium alam 4 megafauna...',
+    handwriting: 'Kabut fajar di kanopi Leuser, stasiun riset empat satwa kunci...',
     fieldNote:
-      'Satu-satunya rimba bumi tempat Harimau, Orangutan, Gajah, dan Badak hidup berdampingan. Menjaga Leuser berarti menjaga penyerap karbon raksasa dunia.',
+      'Satu-satunya rimba bumi tempat Harimau, Orangutan, Gajah, dan Badak hidup berdampingan. Menjaga Leuser berarti mengunci miliaran ton cadangan karbon dunia.',
     ecoRole: 'Apex Predator & Paru-Paru Karbon Utama Sumatera Utara',
     eduAction:
-      'Dukung patroli sapu bersih jerat kawat dan pastikan produk kayu/kertas berlabel ramah lingkungan.',
+      'Dukung patroli sapu bersih jerat kawat dan pastikan produk kayu serta kertas berlabel ramah lingkungan.',
     polaroids: [
       {
-        img: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=600&q=80',
-        caption: 'Harimau Sumatera'
+        img: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=600&q=80',
+        caption: 'Pemantauan Rimba'
       },
       {
-        img: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=600&q=80',
-        caption: 'Gajah Sumatera'
+        img: 'https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=600&q=80',
+        caption: 'Koridor Jelajah Megafauna'
       }
     ],
     filmStrip: [
-      'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=400&q=75'
+      'https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=75'
     ],
-    campaignId: 'camp-harimau-leuser'
+    campaignId: 'camp-iklim-pohon'
   },
   'tn-tanjung-puting': {
     globalIssue: {
-      tag: 'PENGERINGAN GAMBUT & EMISI KARBON',
+      tag: 'PUSAT HIDROLOGI LAHAN BASAH',
       metric: '550 Gigaton Karbon Global di Gambut',
       impact:
         'Gambut yang kering akibat kanalisasi melepaskan emisi gas rumah kaca masif dan memicu kebakaran bawah tanah.'
@@ -95,90 +95,90 @@ const PARK_JOURNAL_EXTRAS = {
       'Kawasan suaka rawa gambut dan rehabilitasi primata Borneo. Lahan gambut dalam mampu menyimpan karbon hingga 10 kali lebih padat dibanding hutan tanah mineral biasa.',
     ecoRole: 'Penyimpan Cadangan Karbon Alami & Suaka Orangutan',
     eduAction:
-      'Pelajari hidrologi sekat kanal gambut dan dukung adopsi bibit pohon endemik rawa.',
+      'Pelajari hidrologi sekat kanal gambut dan dukung adopsi bibit pohon endemik rawa air hitam.',
     polaroids: [
       {
-        img: 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&w=600&q=80',
-        caption: 'Primata Borneo'
+        img: 'https://images.unsplash.com/photo-1516641396056-0ce60a85d49f?auto=format&fit=crop&w=600&q=80',
+        caption: 'Rehabilitasi Primata'
       },
       {
-        img: 'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=600&q=80',
-        caption: 'Kanopi Gambut'
+        img: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=600&q=80',
+        caption: 'Rawa Air Hitam Gambut'
       }
     ],
     filmStrip: [
-      'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=75'
+      'https://images.unsplash.com/photo-1516641396056-0ce60a85d49f?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=400&q=75'
     ],
-    campaignId: 'camp-orangutan-borneo'
+    campaignId: 'camp-iklim-pohon'
   },
   'tn-komodo': {
     globalIssue: {
-      tag: 'POLUSI PLASTIK & PEMUTIHAN KARANG',
+      tag: 'OBSERVATORIUM KELAUTAN TROPIS',
       metric: '11 Juta Ton Plastik Masuk Laut/Thn',
       impact:
         'Kenaikan suhu perairan dan mikroplastik merusak ekosistem karang yang menjadi sumber pangan rantai laut.'
     },
     handwriting: 'Bukit savana gersang dan terumbu karang Segitiga Karang NTT...',
     fieldNote:
-      'Gugusan pulau purba vulkanik tempat kadal raksasa Varanus komodoensis berkuasa. Perairannya menjadi koridor migrasi paus, lumba-lumba, dan pari manta.',
+      'Gugusan pulau purba vulkanik tempat kadal raksasa berkuasa. Perairannya menjadi koridor migrasi paus, lumba-lumba, dan pari manta.',
     ecoRole: 'Predator Puncak Savana & Bio-Indikator Terumbu Karang',
     eduAction:
       'Terapkan gaya hidup minim plastik sekali pakai dan lindungi perairan pesisir dari limbah.',
     polaroids: [
       {
-        img: 'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?auto=format&fit=crop&w=600&q=80',
-        caption: 'Kepulauan Komodo'
+        img: 'https://images.unsplash.com/photo-1518467166778-b88f373ffec7?auto=format&fit=crop&w=600&q=80',
+        caption: 'Teluk Vulkanik Komodo'
       },
       {
-        img: 'https://images.unsplash.com/photo-1570481662006-a3a1374699e8?auto=format&fit=crop&w=600&q=80',
-        caption: 'Perairan NTT'
+        img: 'https://images.unsplash.com/photo-1544552866-d3ed42536cfd?auto=format&fit=crop&w=600&q=80',
+        caption: 'Biota Terumbu Karang'
       }
     ],
     filmStrip: [
-      'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1570481662006-a3a1374699e8?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=75'
+      'https://images.unsplash.com/photo-1518467166778-b88f373ffec7?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1544552866-d3ed42536cfd?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1516683037151-9a17603a8dc7?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?auto=format&fit=crop&w=400&q=75'
     ],
-    campaignId: 'camp-komodo-ntt'
+    campaignId: 'camp-plastik-laut'
   },
   'tn-kerinci-seblat': {
     globalIssue: {
-      tag: 'KEHILANGAN SPESIES & EROSI LERENG',
+      tag: 'MENARA TANGKAPAN AIR SUMATERA',
       metric: '1 Juta Spesies Terancam Punah Global',
       impact:
-        'Perambahan lereng pegunungan mengancam flora puspa raksasa terlangka dunia dan menurunkan debit mata air.'
+        'Perambahan lereng pegunungan mengancam flora puspa raksasa terlangka dunia dan menurunkan debit mata air hulu.'
     },
     handwriting: 'Lembah basah Bukit Barisan, habitat puspa raksasa terlangka...',
     fieldNote:
-      'Koridor hutan pegunungan terluas di Sumatera dengan lebih dari 4.000 jenis flora. Menjaga bunga Rafflesia arnoldii dan populasi kunci Harimau Sumatera.',
+      'Koridor hutan pegunungan terluas di Sumatera dengan lebih dari 4.000 jenis flora. Menjaga bunga Rafflesia arnoldii dan hulu sungai-sungai besar.',
     ecoRole: 'Tangkapan Air Pulau Sumatera & Koridor Flora Langka',
     eduAction:
       'Pahami pentingnya vegetasi pegunungan dalam mencegah tanah longsor dan bencana hidrometeorologi.',
     polaroids: [
       {
-        img: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80',
-        caption: 'Flora Hutan Hujan'
+        img: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80',
+        caption: 'Lembah Kabut Kerinci'
       },
       {
         img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=600&q=80',
-        caption: 'Puspa Sumatera'
+        caption: 'Flora Pegunungan Basah'
       }
     ],
     filmStrip: [
-      'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=75',
       'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=400&q=75'
+      'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=75'
     ],
-    campaignId: 'camp-puspa-sumatera'
+    campaignId: 'camp-iklim-pohon'
   },
   'tn-lorentz': {
     globalIssue: {
-      tag: 'PENCAIRAN GLETSER TROPIKA PUNCAK JAYA',
+      tag: 'STASIUN IKLIM GLETSER ALPIN',
       metric: '-80% Luas Es Abadi Sejak 2010',
       impact:
         'Pemanasan global mengikis habis kubah es abadi tropis Papua, indikator nyata kenaikan suhu planet bumi.'
@@ -186,26 +186,26 @@ const PARK_JOURNAL_EXTRAS = {
     handwriting: 'Dari salju abadi Puncak Jaya hingga rimba dataran rendah Papua...',
     fieldNote:
       'Kawasan konservasi terbesar di Asia Tenggara (2,4 juta hektar). Membentang utuh dari puncak bersalju hingga laut dangkal berhutan bakau.',
-    ecoRole: 'Laboratorium Iklim Dunia & Habitat Burung Cenderawasih',
+    ecoRole: 'Laboratorium Iklim Dunia & Habitat Flora Alpin Unik',
     eduAction:
       'Terapkan efisiensi energi sehari-hari guna menekan laju emisi gas rumah kaca global.',
     polaroids: [
       {
-        img: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=600&q=80',
-        caption: 'Aves Endemik Papua'
+        img: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=600&q=80',
+        caption: 'Puncak Es Alpin Tropis'
       },
       {
-        img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-        caption: 'Pegunungan Papua'
+        img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80',
+        caption: 'Lembah Dataran Tinggi'
       }
     ],
     filmStrip: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=75',
-      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=75'
+      'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=400&q=75',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=75'
     ],
-    campaignId: 'camp-komodo-ntt'
+    campaignId: 'camp-edukasi-sekolah'
   }
 };
 

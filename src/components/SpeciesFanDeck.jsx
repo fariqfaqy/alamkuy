@@ -86,22 +86,22 @@ export default function SpeciesFanDeck({
         <div className="fan-deck-header">
           <div className="fan-top-pill">
             <Sparkles size={14} className="fan-top-pill-icon" />
-            <span>Portal Literasi & Riset Sains Lingkungan</span>
+            <span>Portal Literasi & Riset Sains Hayati</span>
           </div>
 
           <h2 className="fan-main-heading">
-            Modul Edukasi & Literasi
+            Modul Spesies Bio-Indikator
             <br />
-            Ekologi Interaktif
+            Ekologi Hayati Nusantara
           </h2>
 
           <p className="fan-sub-caption">
-            Pelajari konsep krisis iklim, ekosistem rentan, satwa bio-indikator, hingga aksi nyata gaya hidup hijau.
+            Eksplorasi satwa dan puspa kunci penjaga keseimbangan ekosistem nusantara serta peran bio-indikator alami mereka.
           </p>
 
           {/* Category Filter Switch */}
           <div className="fan-category-tabs">
-            {['Semua', 'Isu Iklim', 'Ekosistem Kritis', 'Bio-Indikator', 'Gaya Hidup Hijau'].map((cat) => {
+            {['Semua', 'Mamalia Darat', 'Biota Air & Pesisir', 'Aves & Serangga', 'Puspa Langka'].map((cat) => {
               const isActive = selectedCategory === cat;
               return (
                 <button
@@ -118,7 +118,7 @@ export default function SpeciesFanDeck({
                     />
                   )}
                   <span className="fan-cat-label">
-                    {cat === 'Semua' ? 'Semua Topik' : cat}
+                    {cat === 'Semua' ? 'Semua Spesies' : cat}
                   </span>
                 </button>
               );

@@ -523,3 +523,163 @@ export const INITIAL_DONORS = [
     badge: 'Pendidik Hijau'
   }
 ];
+
+export const ARTICLES_DATA = [
+  {
+    id: 'art-1',
+    title: 'Memahami Ambang Kritis 1.5 Derajat: Mengapa Setiap Fraksi Suhu Menentukan Masa Depan Bumi?',
+    category: 'Sains Iklim',
+    readTime: '5 Menit Baca',
+    date: '10 November 2026',
+    author: 'Tim Peneliti Sains Alamkuy',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+    excerpt: 'Laporan IPCC menegaskan bahwa melampaui ambang batas 1.5°C akan memicu titik balik iklim yang tidak dapat dipulihkan kembali.',
+    content: [
+      'Kenaikan suhu global rata-rata sebesar 1.5 derajat Celsius sering kali terdengar sepele bagi orang awam. Namun dalam termodinamika atmosfer planet bumi, angka ini merupakan batas toleransi bagi stabilitas ekosistem.',
+      'Ketika suhu melampaui 1.5°C menuju 2.0°C, pemutihan terumbu karang global diprediksi melonjak dari 70% menjadi lebih dari 99%. Selain itu, pencairan lapisan permafrost di kutub utara akan melepaskan miliaran ton gas metana terperangkap yang memicu efek umpan balik pemanasan yang tak terkendali.',
+      'Solusi utamanya adalah percepatan pemangkasan emisi bahan bakar fosil hingga 45% sebelum tahun 2030 dan pencapaian Net Zero pada pertengahan abad ini.'
+    ]
+  },
+  {
+    id: 'art-2',
+    title: 'Misteri Ekosistem Gambut: Mengapa Lahan Basah Menyimpan Karbon 10 Kali Lebih Padat dari Hutan Biasa?',
+    category: 'Ekosistem',
+    readTime: '4 Menit Baca',
+    date: '8 November 2026',
+    author: 'Divisi Restorasi Lahan Basah',
+    image: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=900&q=80',
+    excerpt: 'Rawa gambut tropis adalah brankas karbon raksasa alami. Sekali terbakar, emisi yang dilepaskan ke langit luar biasa masif.',
+    content: [
+      'Lahan gambut terbentuk dari tumpukan material tanaman yang terendam air selama ribuan tahun tanpa mengalami pembusukan sempurna karena kondisi anaerobik.',
+      'Meskipun luas lahan gambut di bumi hanya mencakup 3% dari total daratan planet, kawasan ini mengunci lebih dari 550 gigaton karbon, atau setara dengan dua kali lipat cadangan karbon yang tersimpan di seluruh biomassa hutan dunia digabungkan.',
+      'Strategi restorasi 3R (Rewetting melalui sekat kanal, Revegetasi pohon lokal, dan Revitalisasi ekonomi masyarakat) terbukti menjadi tameng paling efektif mencegah karhutla gambut.'
+    ]
+  },
+  {
+    id: 'art-3',
+    title: 'Jejak Tak Kasatmata Mikroplastik: Dari Palung Laut Terdalam Hingga Meja Makan Kita',
+    category: 'Polusi Laut',
+    readTime: '6 Menit Baca',
+    date: '5 November 2026',
+    author: 'Inisiatif Laut Bersih',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80',
+    excerpt: 'Plastik tidak pernah benar-benar hilang, melainkan terpecah menjadi partikel mikro yang kini terdeteksi dalam darah dan garam meja.',
+    content: [
+      'Setiap tahun, diperkirakan 11 juta ton sampah plastik bermuara ke lautan. Paparan sinar ultraviolet matahari dan hantaman ombak mengikis plastik berukuran besar menjadi partikel mikroskopis berukuran di bawah 5 milimeter.',
+      'Plankton dan ikan kecil menelan partikel ini karena mengira makanan, yang kemudian dimakan oleh ikan predator yang lebih besar hingga akhirnya berakhir di piring makan manusia.',
+      'Penelitian terkini membuktikan keberadaan mikroplastik di organ pernapasan dan aliran darah mamalia. Pengurangan drastis kemasan saset dan kantong sekali pakai adalah satu-satunya benteng pertahanan kita.'
+    ]
+  },
+  {
+    id: 'art-4',
+    title: 'Panduan Praktis Zero-Waste Pelajar: 7 Langkah Efektif Memangkas Sampah Harian',
+    category: 'Gaya Hidup Hijau',
+    readTime: '3 Menit Baca',
+    date: '2 November 2026',
+    author: 'Gerakan Sekolah Hijau',
+    image: 'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?auto=format&fit=crop&w=900&q=80',
+    excerpt: 'Memulai gaya hidup minim sampah tidak harus rumit atau mahal. Cukup mulai dari kantin sekolah dan tas ranselmu.',
+    content: [
+      'Gaya hidup ramah lingkungan bukan tentang satu orang yang melakukannya secara sempurna, melainkan jutaan orang yang melakukannya secara konsisten.',
+      'Mulailah dengan membawa botol minum (tumbler) sendiri ke sekolah, menolak sedotan plastik, menggunakan wadah makan berulang untuk jajan di kantin, dan beralih ke catatan digital.',
+      'Selain menghemat uang saku, langkah kecil ini mampu menekan ratusan kilogram timbulan sampah plastik per siswa setiap tahunnya.'
+    ]
+  },
+  {
+    id: 'art-5',
+    title: 'Kekuatan Spesies Payung: Mengapa Menyelamatkan Satu Harimau Berarti Melindungi Satu Hutan Utuh',
+    category: 'Konservasi Hayati',
+    readTime: '5 Menit Baca',
+    date: '28 Oktober 2026',
+    author: 'Unit Riset Satwa Liar',
+    image: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=900&q=80',
+    excerpt: 'Dalam ekologi, apex predator bertindak sebagai pelindung piramida hayati. Menjaga ruang jelajahnya mengamankan ribuan jenis flora dan fauna.',
+    content: [
+      'Istilah spesies payung (umbrella species) disematkan pada satwa yang membutuhkan wilayah jelajah sangat luas dengan ekosistem yang utuh untuk melangsungkan hidupnya.',
+      'Harimau Sumatera membutuhkan puluhan kilometer persegi kawasan rimba yang sehat dengan populasi rusa dan babi hutan yang melimpah. Ketika kita mengamankan koridor seluas itu dari jerat pemburu dan deforestasi, secara otomatis seluruh vegetasi hutan, sumber air minum, burung penyebar biji, dan serangga tanah di bawahnya ikut terlindungi.',
+      'Perlindungan satu spesies kunci sesungguhnya merupakan investasi pertahanan menyeluruh bagi ketahanan biosfer nasional.'
+    ]
+  },
+  {
+    id: 'art-6',
+    title: 'Menyambut Matahari: Bagaimana Transisi Energi Surya Tropis Mengubah Peta Karbon Nusantara',
+    category: 'Energi Bersih',
+    readTime: '4 Menit Baca',
+    date: '24 Oktober 2026',
+    author: 'Pusat Inovasi Transisi Energi',
+    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=900&q=80',
+    excerpt: 'Sebagai negeri khatulistiwa dengan limpahan sinar surya sepanjang tahun, potensi fotovoltaik atap rumah adalah kunci dekarbonisasi mandiri.',
+    content: [
+      'Wilayah kepulauan khatulistiwa menerima radiasi matahari rata-rata 4.8 kWh per meter persegi setiap hari sepanjang tahun. Potensi ini adalah modal luar biasa untuk melepaskan ketergantungan dari bahan bakar fosil impor.',
+      'Dengan perkembangan teknologi panel sel surya fotovoltaik (PV) yang makin efisien dan terjangkau, masyarakat kini dapat memproduksi energi bersih mandiri dari atas atap bangunan mereka.',
+      'Transisi ini tidak hanya menurunkan tagihan listrik bulanan, tetapi juga secara langsung mengurangi beban emisi karbon dari pembangkit listrik tenaga uap.'
+    ]
+  }
+];
+
+export const GALLERY_DATA = [
+  {
+    id: 'gal-1',
+    title: 'Kanopi Rimba Hujan Tropis',
+    category: 'Lanskap Kritis',
+    location: 'Ekosistem Bukit Barisan, Sumatera',
+    image: 'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Lapisan vegetasi bertingkat yang menyerap karbon dan melepaskan jutaan liter uap air segar ke atmosfer setiap hari.'
+  },
+  {
+    id: 'gal-2',
+    title: 'Patroli Sapu Bersih Jerat Rimba',
+    category: 'Aksi Lapangan',
+    location: 'Kawasan Koridor Leuser',
+    image: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Tim ranger menyusuri rimba belantara demi memutus jerat kawat ilegal yang mengancam satwa kunci nusantara.'
+  },
+  {
+    id: 'gal-3',
+    title: 'Pesona Karang Sehat & Ekosistem Bahari',
+    category: 'Lanskap Kritis',
+    location: 'Segitiga Terumbu Karang NTT',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Taman karang beraneka warna yang menjadi tempat pemijahan ribuan jenis ikan sebelum terancam pemutihan akibat pemanasan laut.'
+  },
+  {
+    id: 'gal-4',
+    title: 'Aksi Bersih Pesisir & Pengumpulan Sampah',
+    category: 'Aksi Lapangan',
+    location: 'Pantai Pesisir Jawa Barat',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Relawan muda memilah sampah plastik sekali pakai sebelum sempat hanyut terbawa gelombang menuju laut lepas.'
+  },
+  {
+    id: 'gal-5',
+    title: 'Rehabilitasi Primata & Hutan Gambut',
+    category: 'Flora & Fauna',
+    location: 'Tanjung Puting, Kalimantan Tengah',
+    image: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Individu orangutan yang berhasil dilepasliarkan kembali ke habitat kanopi alami setelah masa rehabilitasi sekolah hutan.'
+  },
+  {
+    id: 'gal-6',
+    title: 'Siklus Air & Aliran Sungai Pegunungan',
+    category: 'Lanskap Kritis',
+    location: 'Daerah Aliran Sungai Kerinci',
+    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Mata air alami pegunungan yang jernih, menjadi urat nadi air minum bagi jutaan warga di hilir.'
+  },
+  {
+    id: 'gal-7',
+    title: 'Workshop Edukasi Lingkungan Pelajar',
+    category: 'Edukasi Komunitas',
+    location: 'Bandung, Jawa Barat',
+    image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Pelajar sekolah menengah mempraktikkan pembuatan pupuk kompos dan pemilahan sampah mandiri.'
+  },
+  {
+    id: 'gal-8',
+    title: 'Harmoni Energi Surya di Lanskap Tropis',
+    category: 'Edukasi Komunitas',
+    location: 'Pembangkit Surya Tersebar',
+    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1200&q=85',
+    caption: 'Pemanfaatan atap fotovoltaik ramah lingkungan yang memangkas ketergantungan pada pembangkit listrik batu bara.'
+  }
+];

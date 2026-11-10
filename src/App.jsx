@@ -22,8 +22,11 @@ import {
   INITIAL_DONORS
 } from './data/conservationData';
 import HeroSlider from './components/HeroSlider';
+import AboutSection from './components/AboutSection';
+import ArticleGallerySection from './components/ArticleGallerySection';
 import SpeciesFanDeck from './components/SpeciesFanDeck';
 import ParkJournalBook from './components/ParkJournalBook';
+import ContactSection from './components/ContactSection';
 import DonationPage from './components/DonationPage';
 import OrigamiFaunaLayer from './components/OrigamiFaunaLayer';
 
@@ -51,8 +54,11 @@ export default function App() {
   useEffect(() => {
     const sections = [
       { id: 'section-beranda', key: 'beranda' },
+      { id: 'section-about', key: 'about' },
+      { id: 'section-artikel-galeri', key: 'konten' },
       { id: 'section-flora-fauna', key: 'spesies' },
       { id: 'section-taman-nasional', key: 'taman' },
+      { id: 'section-contact', key: 'contact' },
       { id: 'section-donasi', key: 'donasi' }
     ];
 
@@ -144,9 +150,12 @@ export default function App() {
   }, [selectedParkRegion]);
 
   const navItems = [
-    { key: 'beranda', label: 'ISU GLOBAL', target: 'section-beranda' },
+    { key: 'beranda', label: 'HOME', target: 'section-beranda' },
+    { key: 'about', label: 'ABOUT', target: 'section-about' },
+    { key: 'konten', label: 'KONTEN & GALERI', target: 'section-artikel-galeri' },
     { key: 'spesies', label: 'MODUL EDUKASI', target: 'section-flora-fauna' },
-    { key: 'taman', label: 'ATLAS 3D BUMI', target: 'section-taman-nasional' }
+    { key: 'taman', label: 'ATLAS 3D', target: 'section-taman-nasional' },
+    { key: 'contact', label: 'CONTACT', target: 'section-contact' }
   ];
 
   const isLightNavbar = activeNav !== 'beranda';
@@ -251,7 +260,21 @@ export default function App() {
                 onClick={() => scrollToSection('section-beranda', 'beranda')}
                 className="mobile-nav-item"
               >
-                Isu Global
+                Home
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection('section-about', 'about')}
+                className="mobile-nav-item"
+              >
+                About (Tentang Kami)
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection('section-artikel-galeri', 'konten')}
+                className="mobile-nav-item"
+              >
+                Konten & Galeri
               </button>
               <button
                 type="button"
@@ -269,10 +292,17 @@ export default function App() {
               </button>
               <button
                 type="button"
+                onClick={() => scrollToSection('section-contact', 'contact')}
+                className="mobile-nav-item"
+              >
+                Contact (Hubungi Kami)
+              </button>
+              <button
+                type="button"
                 onClick={() => scrollToSection('section-donasi', 'donasi')}
                 className="mobile-nav-item mobile-nav-cta"
               >
-                Aksi Nyata
+                Aksi Nyata & Relawan
               </button>
             </motion.div>
           )}
@@ -282,7 +312,7 @@ export default function App() {
       {/* Layer Origami Fauna Bergerak di Berbagai Titik Halaman */}
       <OrigamiFaunaLayer />
 
-      {/* Sesi 1: Hero Slider Interaktif */}
+      {/* Sesi 1: Halaman Home (Hero Slider Interaktif Isu Global) */}
       <div id="section-beranda" className="snap-section">
         <HeroSlider
           slides={HERO_SLIDES}
@@ -293,7 +323,13 @@ export default function App() {
         />
       </div>
 
-      {/* Sesi 2: Kartu Flora & Fauna Model Kipas Interaktif (Tanpa Teks di Bawah Kartu) */}
+      {/* Sesi 2: Halaman About (Tentang Kami, Visi, Misi & 4 Pilar Gerakan) */}
+      <AboutSection />
+
+      {/* Sesi 3: Halaman Konten / Artikel / Galeri Multimedia */}
+      <ArticleGallerySection />
+
+      {/* Sesi 4: Modul Edukasi & Literasi Ekologi Interaktif (Dipertahankan) */}
       <SpeciesFanDeck
         speciesList={SPECIES_DATA}
         selectedCategory={speciesCategory}
@@ -301,13 +337,16 @@ export default function App() {
         onDonateSpecies={(campId) => handleDonateForCampaign(campId)}
       />
 
-      {/* Sesi 3: Profil Taman Nasional Model Jurnal Buku Interaktif */}
+      {/* Sesi 5: Atlas 3D Ekologi & Isu Global Model Jurnal Buku (Dipertahankan) */}
       <ParkJournalBook
         parks={NATIONAL_PARKS}
         onDonatePark={(campId) => handleDonateForCampaign(campId)}
       />
 
-      {/* Sesi 4: Halaman Donasi Interaktif */}
+      {/* Sesi 6: Halaman Contact (Form Kontak, Pengaduan, Info Saluran & FAQ) */}
+      <ContactSection />
+
+      {/* Sesi 7: Halaman Aksi Nyata (Donasi Terverifikasi & Relawan - Dipertahankan) */}
       <div className="snap-section">
         <DonationPage
           campaigns={campaigns}

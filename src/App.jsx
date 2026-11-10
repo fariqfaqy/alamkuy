@@ -32,7 +32,7 @@ const EXPO_EASE = [0.16, 1, 0.3, 1];
 export default function App() {
   const [activeNav, setActiveNav] = useState('beranda');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [bookmarkedIds, setBookmarkedIds] = useState(['ujung-kulon', 'gunung-leuser']);
+  const [bookmarkedIds, setBookmarkedIds] = useState(['krisis-iklim', 'deforestasi-tropis']);
   const [selectedParkRegion, setSelectedParkRegion] = useState('Semua');
   const [speciesCategory, setSpeciesCategory] = useState('Semua');
   const [selectedSlideModal, setSelectedSlideModal] = useState(null);
@@ -144,9 +144,9 @@ export default function App() {
   }, [selectedParkRegion]);
 
   const navItems = [
-    { key: 'beranda', label: 'BERANDA', target: 'section-beranda' },
-    { key: 'spesies', label: 'FLORA & FAUNA', target: 'section-flora-fauna' },
-    { key: 'taman', label: 'TAMAN NASIONAL', target: 'section-taman-nasional' }
+    { key: 'beranda', label: 'ISU GLOBAL', target: 'section-beranda' },
+    { key: 'spesies', label: 'MODUL EDUKASI', target: 'section-flora-fauna' },
+    { key: 'taman', label: 'ATLAS 3D BUMI', target: 'section-taman-nasional' }
   ];
 
   const isLightNavbar = activeNav !== 'beranda';
@@ -166,7 +166,7 @@ export default function App() {
             <span className="brand-icon-circle">
               <Globe2 size={18} />
             </span>
-            <span className="brand-text">NUSANTARA WILD</span>
+            <span className="brand-text">ALAMKUY</span>
           </motion.button>
 
           <nav className="desktop-nav-links" aria-label="Navigasi Utama">
@@ -197,7 +197,7 @@ export default function App() {
                 activeNav === 'donasi' ? 'active' : ''
               }`}
             >
-              DONASI AKSI
+              AKSI NYATA
             </motion.button>
           </nav>
 
@@ -208,8 +208,8 @@ export default function App() {
               whileTap={{ scale: 0.92 }}
               className="navbar-icon-btn"
               onClick={() => scrollToSection('section-flora-fauna', 'spesies')}
-              title="Jelajahi Kartu Flora & Fauna"
-              aria-label="Jelajahi Kartu Flora & Fauna"
+              title="Jelajahi Modul Edukasi Ekologi"
+              aria-label="Jelajahi Modul Edukasi Ekologi"
             >
               <Search size={17} />
             </motion.button>
@@ -221,6 +221,7 @@ export default function App() {
               animate={{ scale: 1 }}
               className="navbar-bookmark-pill"
               onClick={() => scrollToSection('section-taman-nasional', 'taman')}
+              title="Kawasan & Isu Tersimpan"
             >
               <Bookmark size={14} />
               <span>{bookmarkedIds.length}</span>
@@ -250,28 +251,28 @@ export default function App() {
                 onClick={() => scrollToSection('section-beranda', 'beranda')}
                 className="mobile-nav-item"
               >
-                Beranda
+                Isu Global
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('section-flora-fauna', 'spesies')}
                 className="mobile-nav-item"
               >
-                Flora & Fauna
+                Modul Edukasi
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('section-taman-nasional', 'taman')}
                 className="mobile-nav-item"
               >
-                Taman Nasional
+                Atlas 3D Bumi
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('section-donasi', 'donasi')}
                 className="mobile-nav-item mobile-nav-cta"
               >
-                Donasi Aksi
+                Aksi Nyata
               </button>
             </motion.div>
           )}
@@ -324,10 +325,10 @@ export default function App() {
             <span className="brand-icon-circle">
               <Globe2 size={16} />
             </span>
-            <span className="brand-text">NUSANTARA WILD</span>
+            <span className="brand-text">ALAMKUY</span>
           </div>
           <p className="footer-note">
-            Data mengacu pada KLHK, IUCN Red List, UNESCO, dan BRIN.
+            Portal Edukasi Lingkungan & Isu Global. Data bersumber dari IPCC, UNEP, IUCN, dan KLHK.
           </p>
         </div>
       </footer>

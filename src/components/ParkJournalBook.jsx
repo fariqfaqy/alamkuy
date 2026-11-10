@@ -483,12 +483,12 @@ export default function ParkJournalBook({ parks, onDonatePark }) {
             <Layers size={13} />
             <span>ATLAS 3D EKOLOGI & ISU GLOBAL</span>
           </div>
-          <h2 className="journal-title">Jurnal Ekologi Nusantara</h2>
+          <h2 className="journal-title">Atlas 3D Krisis & Solusi Ekologi Global</h2>
           <p className="journal-subtitle">
             <BookOpen size={15} />
             <span>
               {isBookOpen
-                ? `${total} Kawasan Utama • Lembar ${pageIndex + 1} dari ${total}`
+                ? `${total} Bab Krisis & Solusi Ekologi • Lembar ${pageIndex + 1} dari ${total}`
                 : 'Buku Tertutup • Klik Sampul untuk Membuka Lembaran'}
             </span>
           </p>

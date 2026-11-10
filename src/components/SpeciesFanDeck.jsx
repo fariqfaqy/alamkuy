@@ -86,23 +86,22 @@ export default function SpeciesFanDeck({
         <div className="fan-deck-header">
           <div className="fan-top-pill">
             <Sparkles size={14} className="fan-top-pill-icon" />
-            <span>Data Resmi IUCN & KLHK</span>
+            <span>Portal Literasi & Riset Sains Lingkungan</span>
           </div>
 
           <h2 className="fan-main-heading">
-            Flora & Fauna Langka
+            Modul Edukasi & Literasi
             <br />
-            Kepulauan Nusantara
+            Ekologi Interaktif
           </h2>
 
           <p className="fan-sub-caption">
-            Klik kartu di samping untuk memilih, atau klik kartu utama di tengah untuk melihat
-            detail konservasinya.
+            Pelajari konsep krisis iklim, ekosistem rentan, satwa bio-indikator, hingga aksi nyata gaya hidup hijau.
           </p>
 
           {/* Category Filter Switch */}
           <div className="fan-category-tabs">
-            {['Semua', 'Fauna', 'Flora'].map((cat) => {
+            {['Semua', 'Isu Iklim', 'Ekosistem Kritis', 'Bio-Indikator', 'Gaya Hidup Hijau'].map((cat) => {
               const isActive = selectedCategory === cat;
               return (
                 <button
@@ -119,7 +118,7 @@ export default function SpeciesFanDeck({
                     />
                   )}
                   <span className="fan-cat-label">
-                    {cat === 'Semua' ? 'Semua Spesies' : cat}
+                    {cat === 'Semua' ? 'Semua Topik' : cat}
                   </span>
                 </button>
               );
@@ -341,7 +340,7 @@ export default function SpeciesFanDeck({
 
                 <div className="species-compact-box solution-box">
                   <span className="solution-title">
-                    <CheckCircle2 size={14} /> Cara Melestarikan
+                    <CheckCircle2 size={14} /> Solusi & Aksi Nyata
                   </span>
                   <p>{detailSpecies.solutionMain}</p>
                 </div>
@@ -358,7 +357,7 @@ export default function SpeciesFanDeck({
                   className="modal-primary-btn"
                 >
                   <HeartHandshake size={18} />
-                  <span>Bantu Lindungi {detailSpecies.name}</span>
+                  <span>Dukung Aksi Terkait Modul Ini</span>
                 </motion.button>
               </div>
             </motion.div>

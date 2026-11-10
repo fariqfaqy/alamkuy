@@ -102,7 +102,7 @@ export default function HeroSlider({
 
   return (
     <LayoutGroup id="pinterest-hero-slider">
-      <section className="hero-viewport" aria-label="Sorotan Taman Nasional">
+      <section className="hero-viewport" aria-label="Sorotan Isu Lingkungan Global">
         {/* Underneath Base Layer */}
         <div className="hero-bg-underlay" aria-hidden="true">
           <img
@@ -248,7 +248,7 @@ export default function HeroSlider({
                     className="hero-discover-btn"
                   >
                     <Compass size={16} />
-                    <span>PROFIL KAWASAN</span>
+                    <span>DATA ISU GLOBAL</span>
                   </motion.button>
 
                   <motion.button

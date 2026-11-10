@@ -111,9 +111,9 @@ export default function DonationPage({
         >
           <span className="section-eyebrow">
             <HeartHandshake size={16} />
-            AKSI PELESTARIAN
+            HUB AKSI NYATA & RELAWAN
           </span>
-          <h2 className="section-heading">Donasi Penanganan Isu Alam</h2>
+          <h2 className="section-heading">Dukungan Aksi Nyata Pemulihan Lingkungan</h2>
         </motion.div>
 
         {/* Pilihan Kampanye Isu dengan Shared Layout Indicator */}

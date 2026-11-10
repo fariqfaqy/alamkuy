@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Newspaper,
@@ -11,37 +11,36 @@ import {
   MapPin,
   Sparkles,
   Maximize2,
-  RotateCcw,
-  Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight,
-  LayoutGrid,
-  Orbit
+  Globe,
+  LayoutGrid
 } from 'lucide-react';
 import { ARTICLES_DATA, GALLERY_DATA } from '../data/conservationData';
 
 const EXPO_EASE = [0.16, 1, 0.3, 1];
 
 /**
- * 3D Orbit Floating Constellation Stage (Sesuai Animasi Video Referensi)
- * Menampilkan kartu-kartu dalam orbit elips 3D berputar secara dinamis,
- * dengan depth layering, tilt perspektif, drag spin, dan auto-orbiting.
+ * 3D Globe Card Stage (Bola Globe Interaktif 3D)
+ * Menampilkan kartu-kartu dalam formasi bola dunia (globe) 3D dengan rotasi bebas 2 sumbu (X & Y)
+ * yang dikendalikan murni oleh kursor (drag, swipe, dan hover tilt), tanpa perputaran otomatis konstan,
+ * dengan visual kartu yang tajam, kontras tinggi, dan tanpa efek burem.
  */
-function Orbit3DCardStage({
+function Globe3DCardStage({
   items,
   type = 'article', // 'article' | 'photo'
-  onSelect,
-  isPaused,
-  onTogglePause
+  onSelect
 }) {
-  const [rotation, setRotation] = useState(0);
+  const [rotY, setRotY] = useState(0); // Longitude / Yaw
+  const [rotX, setRotX] = useState(0); // Latitude / Pitch
+  const [hoverTilt, setHoverTilt] = useState({ x: 0, y: 0 });
   const [hoveredIdx, setHoveredIdx] = useState(null);
-  const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const startRotationRef = useRef(0);
-  const animFrameRef = useRef(null);
+
   const stageRef = useRef(null);
+  const isDraggingRef = useRef(false);
+  const startPosRef = useRef({ x: 0, y: 0 });
+  const startRotRef = useRef({ x: 0, y: 0 });
+  const velRef = useRef({ x: 0, y: 0 });
+  const animFrameRef = useRef(null);
+  const hasDraggedRef = useRef(false);
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 1200
@@ -56,124 +55,217 @@ function Orbit3DCardStage({
   const isMobile = windowWidth <= 768;
   const isTablet = windowWidth > 768 && windowWidth <= 1080;
 
-  // Orbit radius parameter
-  const radiusX = isMobile ? 180 : isTablet ? 280 : 380;
-  const radiusZ = isMobile ? 130 : isTablet ? 190 : 260;
+  // Jari-jari bola 3D (Spherical radius)
+  const radiusX = isMobile ? 180 : isTablet ? 290 : 380;
+  const radiusY = isMobile ? 120 : isTablet ? 180 : 230;
+  const radiusZ = isMobile ? 160 : isTablet ? 250 : 330;
 
-  // Continuous auto-orbit loop (60 FPS)
-  useEffect(() => {
-    let lastTime = performance.now();
-    const loop = (now) => {
-      const dt = now - lastTime;
-      lastTime = now;
-      if (!isDraggingRef.current && hoveredIdx === null && !isPaused) {
-        // Kecepatan putaran orbit yang tenang dan sinematik
-        setRotation((prev) => (prev + 0.08 * (dt / 16.6)) % 360);
-      }
-      animFrameRef.current = requestAnimationFrame(loop);
-    };
-    animFrameRef.current = requestAnimationFrame(loop);
-    return () => {
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [hoveredIdx, isPaused]);
-
-  // Pointer Drag Handlers
+  // Pointer drag & hover interaction handlers
   const handlePointerDown = (e) => {
     isDraggingRef.current = true;
-    startXRef.current = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-    startRotationRef.current = rotation;
+    hasDraggedRef.current = false;
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+    startPosRef.current = { x: clientX, y: clientY };
+    startRotRef.current = { x: rotX, y: rotY };
+    velRef.current = { x: 0, y: 0 };
+
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
   };
 
   const handlePointerMove = (e) => {
-    if (!isDraggingRef.current) return;
     const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-    const deltaX = clientX - startXRef.current;
-    // Sensitivitas drag
-    const sensitivity = isMobile ? 0.38 : 0.28;
-    setRotation(startRotationRef.current + deltaX * sensitivity);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+
+    if (isDraggingRef.current) {
+      const dx = clientX - startPosRef.current.x;
+      const dy = clientY - startPosRef.current.y;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+        hasDraggedRef.current = true;
+      }
+      const sensitivityX = isMobile ? 0.42 : 0.32;
+      const sensitivityY = isMobile ? 0.36 : 0.26;
+
+      const nextRotY = startRotRef.current.y + dx * sensitivityX;
+      // Batasi sudut elevasi pitch antara -65 derajat sampai +65 derajat agar kartu tidak terbalik
+      const nextRotX = Math.max(-65, Math.min(65, startRotRef.current.x - dy * sensitivityY));
+
+      velRef.current = {
+        x: (nextRotX - rotX) * 0.42,
+        y: (nextRotY - rotY) * 0.42
+      };
+
+      setRotY(nextRotY);
+      setRotX(nextRotX);
+    } else {
+      // Dinamika sudut miring halus saat kursor melayang di atas panggung globe
+      if (stageRef.current) {
+        const rect = stageRef.current.getBoundingClientRect();
+        const nx = (clientX - rect.left) / rect.width - 0.5;
+        const ny = (clientY - rect.top) / rect.height - 0.5;
+        setHoverTilt({ x: -ny * 10, y: nx * 14 });
+      }
+    }
   };
 
   const handlePointerUp = () => {
+    if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
+
+    // Pelepasan inersia halus yang melambat dan berhenti sempurna (tidak berputar terus)
+    let vx = velRef.current.x;
+    let vy = velRef.current.y;
+
+    if (Math.abs(vx) < 0.05 && Math.abs(vy) < 0.05) {
+      return;
+    }
+
+    const momentumStep = () => {
+      vx *= 0.91;
+      vy *= 0.91;
+
+      setRotY((prev) => prev + vy);
+      setRotX((prev) => Math.max(-65, Math.min(65, prev + vx)));
+
+      if (Math.abs(vx) > 0.02 || Math.abs(vy) > 0.02) {
+        animFrameRef.current = requestAnimationFrame(momentumStep);
+      } else {
+        animFrameRef.current = null;
+      }
+    };
+    animFrameRef.current = requestAnimationFrame(momentumStep);
   };
 
-  const handleStepLeft = () => {
-    setRotation((prev) => prev - (360 / items.length));
+  const handleMouseLeave = () => {
+    handlePointerUp();
+    setHoverTilt({ x: 0, y: 0 });
   };
 
-  const handleStepRight = () => {
-    setRotation((prev) => prev + (360 / items.length));
-  };
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, []);
 
+  // Formasi distribusi koordinat bola dunia 3D (Spherical Coordinates)
   const total = items.length;
+  const cardsGlobeLayout = useMemo(() => {
+    return items.map((item, idx) => {
+      // Rentang garis lintang (latitude) dari -48 derajat sampai +48 derajat
+      const latDeg = total > 1 ? -48 + (idx / (total - 1)) * 96 : 0;
+      const latRad = (latDeg * Math.PI) / 180;
+
+      // Distribusi bujur (longitude) rasio emas agar kartu merata mengelilingi globe
+      const lonDeg = (idx * (360 / total) * 1.6180339887) % 360;
+      const lonRad = (lonDeg * Math.PI) / 180;
+
+      // Titik dasar pada permukaan bola 3D
+      const x0 = radiusX * Math.cos(latRad) * Math.sin(lonRad);
+      const y0 = radiusY * Math.sin(latRad);
+      const z0 = radiusZ * Math.cos(latRad) * Math.cos(lonRad);
+
+      return {
+        item,
+        idx,
+        x0,
+        y0,
+        z0
+      };
+    });
+  }, [items, total, radiusX, radiusY, radiusZ]);
+
+  // Sudut rotasi total yang digabungkan
+  const currentRotX = rotX + hoverTilt.x;
+  const currentRotY = rotY + hoverTilt.y;
+
+  const radX = (currentRotX * Math.PI) / 180;
+  const radY = (currentRotY * Math.PI) / 180;
+  const cosX = Math.cos(radX);
+  const sinX = Math.sin(radX);
+  const cosY = Math.cos(radY);
+  const sinY = Math.sin(radY);
 
   return (
     <div
       ref={stageRef}
-      className="orbit-3d-stage"
+      className="orbit-3d-stage globe-3d-stage"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      aria-label="Orbit 3D Carousel"
+      onMouseLeave={handleMouseLeave}
+      aria-label="Bola Globe 3D Konten Interaktif"
     >
-      {/* Background Orbit Depth Rings & Glow */}
-      <div className="orbit-space-backdrop" aria-hidden="true">
-        <div className="orbit-center-glow" />
-        <div className="orbit-depth-ring ring-outer" />
-        <div className="orbit-depth-ring ring-mid" />
-        <div className="orbit-depth-ring ring-inner" />
+      {/* Visualisasi Grid Garis Bujur & Lintang Globe serta Aura Atmosfer */}
+      <div className="orbit-space-backdrop globe-backdrop" aria-hidden="true">
+        <div className="orbit-center-glow globe-aura-glow" />
+        <div
+          className="globe-wire-grid"
+          style={{
+            transform: `rotateX(${currentRotX * 0.45}deg) rotateY(${currentRotY * 0.45}deg)`
+          }}
+        >
+          <div className="globe-lat-ring ring-equator" />
+          <div className="globe-lat-ring ring-tropic-north" />
+          <div className="globe-lat-ring ring-tropic-south" />
+          <div className="globe-meridian-ring ring-meridian-1" />
+          <div className="globe-meridian-ring ring-meridian-2" />
+        </div>
       </div>
 
-      {/* Orbit 3D Ring Container */}
+      {/* Lapisan Kartu 3D Permukaan Globe */}
       <div className="orbit-card-ring">
-        {items.map((item, idx) => {
-          const baseAngle = (idx / total) * 360;
-          const currentAngle = (baseAngle + rotation) % 360;
-          const rad = (currentAngle * Math.PI) / 180;
+        {cardsGlobeLayout.map(({ item, idx, x0, y0, z0 }) => {
+          // 1. Rotasi Horizontal terhadap Sumbu Y (Bujur / Longitude)
+          const x1 = x0 * cosY + z0 * sinY;
+          const z1 = -x0 * sinY + z0 * cosY;
+          const y1 = y0;
 
-          // Trigonometri koordinat elips 3D
-          const x = Math.sin(rad) * radiusX;
-          const z = Math.cos(rad) * radiusZ;
-          // Gelombang vertikal halus untuk kesan melayang organik seperti di video
-          const y = Math.sin(rad * 1.5) * (isMobile ? 24 : 38);
+          // 2. Rotasi Vertikal terhadap Sumbu X (Lintang / Latitude)
+          const y2 = y1 * cosX - z1 * sinX;
+          const z2 = y1 * sinX + z1 * cosX;
+          const x2 = x1;
 
-          // Normalisasi kedalaman Z (-radiusZ ke +radiusZ)
-          const normalizedZ = (z + radiusZ) / (2 * radiusZ);
-          const isFront = normalizedZ > 0.65;
+          // Normalisasi kedalaman Z (-radiusZ sampai +radiusZ)
+          const normZ = (z2 + radiusZ) / (2 * radiusZ);
+          const isFront = normZ > 0.52;
           const scale = isMobile
-            ? 0.72 + normalizedZ * 0.3
-            : 0.76 + normalizedZ * 0.34;
-          const opacity = isMobile
-            ? 0.45 + normalizedZ * 0.55
-            : 0.42 + normalizedZ * 0.58;
-          const zIndex = Math.round(normalizedZ * 100);
+            ? 0.76 + normZ * 0.28
+            : 0.82 + normZ * 0.32;
 
-          // Sudut rotasi 3D agar kartu menghadap ke arah kamera
-          const rotateY = -Math.sin(rad) * 24;
-          const rotateX = -Math.cos(rad) * 10;
+          // Kartu dibuat jernih dan tajam (tanpa efek blur, kontras tinggi)
+          const opacity = 0.90 + normZ * 0.10;
+          const zIndex = Math.round(normZ * 260);
+
+          // Kemiringan kurvatur bola 3D
+          const tiltY = (x2 / radiusX) * 20;
+          const tiltX = -(y2 / radiusY) * 16;
 
           const isHovered = hoveredIdx === idx;
 
           return (
             <motion.div
               key={item.id}
-              className={`orbit-floating-card ${isFront ? 'is-front' : 'is-back'} ${
+              className={`orbit-floating-card globe-card ${isFront ? 'is-front' : 'is-back'} ${
                 isHovered ? 'is-hovered' : ''
               }`}
               style={{
-                transform: `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), ${z}px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(${
+                transform: `translate3d(calc(-50% + ${x2}px), calc(-50% + ${y2}px), ${z2}px) rotateY(${tiltY}deg) rotateX(${tiltX}deg) scale(${
                   isHovered ? scale * 1.12 : scale
                 })`,
                 opacity: isHovered ? 1 : opacity,
-                zIndex: isHovered ? zIndex + 200 : zIndex
+                zIndex: isHovered ? zIndex + 300 : zIndex
               }}
               onMouseEnter={() => setHoveredIdx(idx)}
               onMouseLeave={() => setHoveredIdx(null)}
               onClick={(e) => {
                 e.stopPropagation();
-                onSelect(item);
+                if (!hasDraggedRef.current) {
+                  onSelect(item);
+                }
               }}
               role="button"
               tabIndex={0}
@@ -182,14 +274,14 @@ function Orbit3DCardStage({
               }}
               aria-label={`Buka ${item.title}`}
             >
-              {/* Card Image */}
+              {/* Gambar Kartu */}
               <div className="orbit-card-img-wrap">
                 <img src={item.image} alt={item.title} loading="lazy" />
                 <div className="orbit-card-gradient" />
                 <div className="orbit-card-sheen" />
               </div>
 
-              {/* Card Content Overlay */}
+              {/* Konten Teks Kartu */}
               <div className="orbit-card-content">
                 <span className="orbit-cat-pill">{item.category}</span>
                 <h4 className="orbit-card-title">{item.title}</h4>
@@ -219,42 +311,8 @@ function Orbit3DCardStage({
         })}
       </div>
 
-      {/* Orbit Floating Action Controls */}
-      <div className="orbit-stage-controls">
-        <button
-          type="button"
-          onClick={handleStepLeft}
-          className="orbit-nav-btn"
-          title="Putar ke Kiri"
-          aria-label="Putar ke Kiri"
-        >
-          <ChevronLeft size={18} />
-        </button>
-
-        <button
-          type="button"
-          onClick={onTogglePause}
-          className={`orbit-play-btn ${!isPaused ? 'active' : ''}`}
-          title={isPaused ? 'Mulai Putar Otomatis' : 'Jeda Putaran'}
-          aria-label={isPaused ? 'Mulai Putar Otomatis' : 'Jeda Putaran'}
-        >
-          {isPaused ? <Play size={15} /> : <Pause size={15} />}
-          <span>{isPaused ? 'Putar' : 'Jeda'}</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={handleStepRight}
-          className="orbit-nav-btn"
-          title="Putar ke Kanan"
-          aria-label="Putar ke Kanan"
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
-
       <p className="orbit-drag-hint">
-        Geser kursor atau sentuh layar untuk memutar orbit • Klik kartu untuk melihat detail
+        Arahkan kursor atau seret untuk memutar bola globe 3D secara bebas • Klik kartu untuk melihat detail
       </p>
     </div>
   );
@@ -262,42 +320,9 @@ function Orbit3DCardStage({
 
 export default function ArticleGallerySection() {
   const [activeTab, setActiveTab] = useState('artikel'); // 'artikel' | 'galeri'
-  const [displayMode, setDisplayMode] = useState('orbit'); // 'orbit' | 'grid'
-  const [articleCategory, setArticleCategory] = useState('Semua');
-  const [galleryCategory, setGalleryCategory] = useState('Semua');
+  const [displayMode, setDisplayMode] = useState('globe'); // 'globe' | 'grid'
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [isOrbitPaused, setIsOrbitPaused] = useState(false);
-
-  // Filtered Articles
-  const articleCategories = [
-    'Semua',
-    'Riset Kebijakan',
-    'Teknologi Hijau',
-    'Sosial Ekologi',
-    'Ekonomi Sirkular',
-    'Restorasi Ekologi',
-    'Pendidikan Lingkungan'
-  ];
-
-  const filteredArticles = useMemo(() => {
-    if (articleCategory === 'Semua') return ARTICLES_DATA;
-    return ARTICLES_DATA.filter((a) => a.category === articleCategory);
-  }, [articleCategory]);
-
-  // Filtered Gallery
-  const galleryCategories = [
-    'Semua',
-    'Riset Lapangan',
-    'Aksi Restorasi',
-    'Dokumentasi Konservasi',
-    'Pendidikan Komunitas'
-  ];
-
-  const filteredGallery = useMemo(() => {
-    if (galleryCategory === 'Semua') return GALLERY_DATA;
-    return GALLERY_DATA.filter((g) => g.category === galleryCategory);
-  }, [galleryCategory]);
 
   return (
     <section id="section-artikel-galeri" className="artikel-galeri-section snap-section">
@@ -360,17 +385,17 @@ export default function ArticleGallerySection() {
               </button>
             </div>
 
-            {/* Display Mode Toggle: 3D Orbit vs Grid */}
+            {/* Display Mode Toggle: 3D Globe vs Grid */}
             <div className="display-mode-toggle-group">
               <button
                 type="button"
-                onClick={() => setDisplayMode('orbit')}
-                className={`mode-toggle-btn ${displayMode === 'orbit' ? 'active' : ''}`}
-                title="Tampilan 3D Orbit Carousel (Sesuai Video)"
-                aria-label="Tampilan 3D Orbit Carousel"
+                onClick={() => setDisplayMode('globe')}
+                className={`mode-toggle-btn ${displayMode === 'globe' ? 'active' : ''}`}
+                title="Tampilan Bola Globe 3D"
+                aria-label="Tampilan Bola Globe 3D"
               >
-                <Orbit size={16} />
-                <span>3D Orbit</span>
+                <Globe size={16} />
+                <span>3D Globe</span>
               </button>
               <button
                 type="button"
@@ -396,32 +421,16 @@ export default function ArticleGallerySection() {
             transition={{ duration: 0.45 }}
             className="articles-view-wrapper"
           >
-            {/* Filter Kategori Artikel */}
-            <div className="filter-pill-scroll">
-              {articleCategories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setArticleCategory(cat)}
-                  className={`filter-pill-btn ${articleCategory === cat ? 'active' : ''}`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Render 3D Orbit vs Grid */}
-            {displayMode === 'orbit' ? (
-              <Orbit3DCardStage
-                items={filteredArticles}
+            {/* Render 3D Globe vs Grid (Filter dihapus sesuai permintaan) */}
+            {displayMode === 'globe' ? (
+              <Globe3DCardStage
+                items={ARTICLES_DATA}
                 type="article"
                 onSelect={(art) => setSelectedArticle(art)}
-                isPaused={isOrbitPaused}
-                onTogglePause={() => setIsOrbitPaused((p) => !p)}
               />
             ) : (
               <div className="articles-grid">
-                {filteredArticles.map((art, idx) => (
+                {ARTICLES_DATA.map((art, idx) => (
                   <motion.article
                     key={art.id}
                     initial={{ opacity: 0, y: 24 }}
@@ -481,32 +490,16 @@ export default function ArticleGallerySection() {
             transition={{ duration: 0.45 }}
             className="gallery-view-wrapper"
           >
-            {/* Filter Kategori Galeri */}
-            <div className="filter-pill-scroll">
-              {galleryCategories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setGalleryCategory(cat)}
-                  className={`filter-pill-btn ${galleryCategory === cat ? 'active' : ''}`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Render 3D Orbit vs Grid */}
-            {displayMode === 'orbit' ? (
-              <Orbit3DCardStage
-                items={filteredGallery}
+            {/* Render 3D Globe vs Grid (Filter dihapus sesuai permintaan) */}
+            {displayMode === 'globe' ? (
+              <Globe3DCardStage
+                items={GALLERY_DATA}
                 type="photo"
                 onSelect={(photo) => setSelectedPhoto(photo)}
-                isPaused={isOrbitPaused}
-                onTogglePause={() => setIsOrbitPaused((p) => !p)}
               />
             ) : (
               <div className="gallery-masonry-grid">
-                {filteredGallery.map((photo, idx) => (
+                {GALLERY_DATA.map((photo, idx) => (
                   <motion.div
                     key={photo.id}
                     initial={{ opacity: 0, scale: 0.94 }}

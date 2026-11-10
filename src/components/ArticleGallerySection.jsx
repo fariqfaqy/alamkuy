@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Newspaper,
@@ -10,30 +10,274 @@ import {
   X,
   MapPin,
   Sparkles,
-  ChevronRight,
   Maximize2,
-  BookOpen
+  RotateCcw,
+  Play,
+  Pause,
+  ChevronLeft,
+  ChevronRight,
+  LayoutGrid,
+  Orbit
 } from 'lucide-react';
 import { ARTICLES_DATA, GALLERY_DATA } from '../data/conservationData';
 
 const EXPO_EASE = [0.16, 1, 0.3, 1];
 
+/**
+ * 3D Orbit Floating Constellation Stage (Sesuai Animasi Video Referensi)
+ * Menampilkan kartu-kartu dalam orbit elips 3D berputar secara dinamis,
+ * dengan depth layering, tilt perspektif, drag spin, dan auto-orbiting.
+ */
+function Orbit3DCardStage({
+  items,
+  type = 'article', // 'article' | 'photo'
+  onSelect,
+  isPaused,
+  onTogglePause
+}) {
+  const [rotation, setRotation] = useState(0);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startRotationRef = useRef(0);
+  const animFrameRef = useRef(null);
+  const stageRef = useRef(null);
+
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
+  const isTablet = windowWidth > 768 && windowWidth <= 1080;
+
+  // Orbit radius parameter
+  const radiusX = isMobile ? 180 : isTablet ? 280 : 380;
+  const radiusZ = isMobile ? 130 : isTablet ? 190 : 260;
+
+  // Continuous auto-orbit loop (60 FPS)
+  useEffect(() => {
+    let lastTime = performance.now();
+    const loop = (now) => {
+      const dt = now - lastTime;
+      lastTime = now;
+      if (!isDraggingRef.current && hoveredIdx === null && !isPaused) {
+        // Kecepatan putaran orbit yang tenang dan sinematik
+        setRotation((prev) => (prev + 0.08 * (dt / 16.6)) % 360);
+      }
+      animFrameRef.current = requestAnimationFrame(loop);
+    };
+    animFrameRef.current = requestAnimationFrame(loop);
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, [hoveredIdx, isPaused]);
+
+  // Pointer Drag Handlers
+  const handlePointerDown = (e) => {
+    isDraggingRef.current = true;
+    startXRef.current = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+    startRotationRef.current = rotation;
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDraggingRef.current) return;
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+    const deltaX = clientX - startXRef.current;
+    // Sensitivitas drag
+    const sensitivity = isMobile ? 0.38 : 0.28;
+    setRotation(startRotationRef.current + deltaX * sensitivity);
+  };
+
+  const handlePointerUp = () => {
+    isDraggingRef.current = false;
+  };
+
+  const handleStepLeft = () => {
+    setRotation((prev) => prev - (360 / items.length));
+  };
+
+  const handleStepRight = () => {
+    setRotation((prev) => prev + (360 / items.length));
+  };
+
+  const total = items.length;
+
+  return (
+    <div
+      ref={stageRef}
+      className="orbit-3d-stage"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      aria-label="Orbit 3D Carousel"
+    >
+      {/* Background Orbit Depth Rings & Glow */}
+      <div className="orbit-space-backdrop" aria-hidden="true">
+        <div className="orbit-center-glow" />
+        <div className="orbit-depth-ring ring-outer" />
+        <div className="orbit-depth-ring ring-mid" />
+        <div className="orbit-depth-ring ring-inner" />
+      </div>
+
+      {/* Orbit 3D Ring Container */}
+      <div className="orbit-card-ring">
+        {items.map((item, idx) => {
+          const baseAngle = (idx / total) * 360;
+          const currentAngle = (baseAngle + rotation) % 360;
+          const rad = (currentAngle * Math.PI) / 180;
+
+          // Trigonometri koordinat elips 3D
+          const x = Math.sin(rad) * radiusX;
+          const z = Math.cos(rad) * radiusZ;
+          // Gelombang vertikal halus untuk kesan melayang organik seperti di video
+          const y = Math.sin(rad * 1.5) * (isMobile ? 24 : 38);
+
+          // Normalisasi kedalaman Z (-radiusZ ke +radiusZ)
+          const normalizedZ = (z + radiusZ) / (2 * radiusZ);
+          const isFront = normalizedZ > 0.65;
+          const scale = isMobile
+            ? 0.72 + normalizedZ * 0.3
+            : 0.76 + normalizedZ * 0.34;
+          const opacity = isMobile
+            ? 0.45 + normalizedZ * 0.55
+            : 0.42 + normalizedZ * 0.58;
+          const zIndex = Math.round(normalizedZ * 100);
+
+          // Sudut rotasi 3D agar kartu menghadap ke arah kamera
+          const rotateY = -Math.sin(rad) * 24;
+          const rotateX = -Math.cos(rad) * 10;
+
+          const isHovered = hoveredIdx === idx;
+
+          return (
+            <motion.div
+              key={item.id}
+              className={`orbit-floating-card ${isFront ? 'is-front' : 'is-back'} ${
+                isHovered ? 'is-hovered' : ''
+              }`}
+              style={{
+                transform: `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), ${z}px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(${
+                  isHovered ? scale * 1.12 : scale
+                })`,
+                opacity: isHovered ? 1 : opacity,
+                zIndex: isHovered ? zIndex + 200 : zIndex
+              }}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(item);
+              }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') onSelect(item);
+              }}
+              aria-label={`Buka ${item.title}`}
+            >
+              {/* Card Image */}
+              <div className="orbit-card-img-wrap">
+                <img src={item.image} alt={item.title} loading="lazy" />
+                <div className="orbit-card-gradient" />
+                <div className="orbit-card-sheen" />
+              </div>
+
+              {/* Card Content Overlay */}
+              <div className="orbit-card-content">
+                <span className="orbit-cat-pill">{item.category}</span>
+                <h4 className="orbit-card-title">{item.title}</h4>
+
+                {type === 'article' ? (
+                  <div className="orbit-card-meta">
+                    <span>
+                      <Clock size={12} /> {item.readTime}
+                    </span>
+                    <span className="orbit-view-cta">
+                      Baca <ArrowRight size={12} />
+                    </span>
+                  </div>
+                ) : (
+                  <div className="orbit-card-meta">
+                    <span>
+                      <MapPin size={12} /> {item.location}
+                    </span>
+                    <span className="orbit-zoom-tag">
+                      <Maximize2 size={13} />
+                    </span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Orbit Floating Action Controls */}
+      <div className="orbit-stage-controls">
+        <button
+          type="button"
+          onClick={handleStepLeft}
+          className="orbit-nav-btn"
+          title="Putar ke Kiri"
+          aria-label="Putar ke Kiri"
+        >
+          <ChevronLeft size={18} />
+        </button>
+
+        <button
+          type="button"
+          onClick={onTogglePause}
+          className={`orbit-play-btn ${!isPaused ? 'active' : ''}`}
+          title={isPaused ? 'Mulai Putar Otomatis' : 'Jeda Putaran'}
+          aria-label={isPaused ? 'Mulai Putar Otomatis' : 'Jeda Putaran'}
+        >
+          {isPaused ? <Play size={15} /> : <Pause size={15} />}
+          <span>{isPaused ? 'Putar' : 'Jeda'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={handleStepRight}
+          className="orbit-nav-btn"
+          title="Putar ke Kanan"
+          aria-label="Putar ke Kanan"
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+
+      <p className="orbit-drag-hint">
+        Geser kursor atau sentuh layar untuk memutar orbit • Klik kartu untuk melihat detail
+      </p>
+    </div>
+  );
+}
+
 export default function ArticleGallerySection() {
   const [activeTab, setActiveTab] = useState('artikel'); // 'artikel' | 'galeri'
+  const [displayMode, setDisplayMode] = useState('orbit'); // 'orbit' | 'grid'
   const [articleCategory, setArticleCategory] = useState('Semua');
   const [galleryCategory, setGalleryCategory] = useState('Semua');
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [isOrbitPaused, setIsOrbitPaused] = useState(false);
 
   // Filtered Articles
   const articleCategories = [
     'Semua',
-    'Sains Iklim',
-    'Ekosistem',
-    'Polusi Laut',
-    'Gaya Hidup Hijau',
-    'Konservasi Hayati',
-    'Energi Bersih'
+    'Riset Kebijakan',
+    'Teknologi Hijau',
+    'Sosial Ekologi',
+    'Ekonomi Sirkular',
+    'Restorasi Ekologi',
+    'Pendidikan Lingkungan'
   ];
 
   const filteredArticles = useMemo(() => {
@@ -44,10 +288,10 @@ export default function ArticleGallerySection() {
   // Filtered Gallery
   const galleryCategories = [
     'Semua',
-    'Lanskap Kritis',
-    'Aksi Lapangan',
-    'Flora & Fauna',
-    'Edukasi Komunitas'
+    'Riset Lapangan',
+    'Aksi Restorasi',
+    'Dokumentasi Konservasi',
+    'Pendidikan Komunitas'
   ];
 
   const filteredGallery = useMemo(() => {
@@ -79,39 +323,66 @@ export default function ArticleGallerySection() {
             Jelajahi analisis sains mutakhir, panduan aksi ramah lingkungan harian, serta potret visual bentang alam dan aksi nyata pemulihan biosfer.
           </p>
 
-          {/* Tab Switcher: Artikel vs Galeri */}
-          <div className="content-main-tab-row">
-            <button
-              type="button"
-              onClick={() => setActiveTab('artikel')}
-              className={`content-tab-btn ${activeTab === 'artikel' ? 'active' : ''}`}
-            >
-              <Newspaper size={17} />
-              <span>Jurnal & Artikel Edukasi ({ARTICLES_DATA.length})</span>
-              {activeTab === 'artikel' && (
-                <motion.span
-                  layoutId="contentTabHighlight"
-                  className="content-tab-pill-bg"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
+          {/* Sub Navigation Bar: Tab Switcher & Display Mode Switcher */}
+          <div className="content-toolbar-row">
+            {/* Tab Switcher: Artikel vs Galeri */}
+            <div className="content-main-tab-row">
+              <button
+                type="button"
+                onClick={() => setActiveTab('artikel')}
+                className={`content-tab-btn ${activeTab === 'artikel' ? 'active' : ''}`}
+              >
+                <Newspaper size={17} />
+                <span>Jurnal & Artikel Edukasi ({ARTICLES_DATA.length})</span>
+                {activeTab === 'artikel' && (
+                  <motion.span
+                    layoutId="contentTabHighlight"
+                    className="content-tab-pill-bg"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setActiveTab('galeri')}
-              className={`content-tab-btn ${activeTab === 'galeri' ? 'active' : ''}`}
-            >
-              <ImageIcon size={17} />
-              <span>Galeri Visual Lapangan ({GALLERY_DATA.length})</span>
-              {activeTab === 'galeri' && (
-                <motion.span
-                  layoutId="contentTabHighlight"
-                  className="content-tab-pill-bg"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('galeri')}
+                className={`content-tab-btn ${activeTab === 'galeri' ? 'active' : ''}`}
+              >
+                <ImageIcon size={17} />
+                <span>Galeri Visual Lapangan ({GALLERY_DATA.length})</span>
+                {activeTab === 'galeri' && (
+                  <motion.span
+                    layoutId="contentTabHighlight"
+                    className="content-tab-pill-bg"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </button>
+            </div>
+
+            {/* Display Mode Toggle: 3D Orbit vs Grid */}
+            <div className="display-mode-toggle-group">
+              <button
+                type="button"
+                onClick={() => setDisplayMode('orbit')}
+                className={`mode-toggle-btn ${displayMode === 'orbit' ? 'active' : ''}`}
+                title="Tampilan 3D Orbit Carousel (Sesuai Video)"
+                aria-label="Tampilan 3D Orbit Carousel"
+              >
+                <Orbit size={16} />
+                <span>3D Orbit</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDisplayMode('grid')}
+                className={`mode-toggle-btn ${displayMode === 'grid' ? 'active' : ''}`}
+                title="Tampilan Grid Klasik"
+                aria-label="Tampilan Grid Klasik"
+              >
+                <LayoutGrid size={16} />
+                <span>Grid Klasik</span>
+              </button>
+            </div>
           </div>
         </motion.div>
 
@@ -139,54 +410,64 @@ export default function ArticleGallerySection() {
               ))}
             </div>
 
-            {/* Grid Artikel */}
-            <div className="articles-grid">
-              {filteredArticles.map((art, idx) => (
-                <motion.article
-                  key={art.id}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.5, delay: idx * 0.06, ease: EXPO_EASE }}
-                  whileHover={{ y: -6 }}
-                  className="article-card"
-                  onClick={() => setSelectedArticle(art)}
-                  tabIndex={0}
-                  role="button"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') setSelectedArticle(art);
-                  }}
-                >
-                  <div className="article-card-cover">
-                    <img src={art.image} alt={art.title} loading="lazy" />
-                    <span className="article-cat-tag">{art.category}</span>
-                  </div>
-
-                  <div className="article-card-body">
-                    <div className="article-meta-row">
-                      <span className="article-meta-item">
-                        <Clock size={13} /> {art.readTime}
-                      </span>
-                      <span className="article-meta-item">
-                        <Calendar size={13} /> {art.date}
-                      </span>
+            {/* Render 3D Orbit vs Grid */}
+            {displayMode === 'orbit' ? (
+              <Orbit3DCardStage
+                items={filteredArticles}
+                type="article"
+                onSelect={(art) => setSelectedArticle(art)}
+                isPaused={isOrbitPaused}
+                onTogglePause={() => setIsOrbitPaused((p) => !p)}
+              />
+            ) : (
+              <div className="articles-grid">
+                {filteredArticles.map((art, idx) => (
+                  <motion.article
+                    key={art.id}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.5, delay: idx * 0.06, ease: EXPO_EASE }}
+                    whileHover={{ y: -6 }}
+                    className="article-card"
+                    onClick={() => setSelectedArticle(art)}
+                    tabIndex={0}
+                    role="button"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') setSelectedArticle(art);
+                    }}
+                  >
+                    <div className="article-card-cover">
+                      <img src={art.image} alt={art.title} loading="lazy" />
+                      <span className="article-cat-tag">{art.category}</span>
                     </div>
 
-                    <h3 className="article-title">{art.title}</h3>
-                    <p className="article-excerpt">{art.excerpt}</p>
+                    <div className="article-card-body">
+                      <div className="article-meta-row">
+                        <span className="article-meta-item">
+                          <Clock size={13} /> {art.readTime}
+                        </span>
+                        <span className="article-meta-item">
+                          <Calendar size={13} /> {art.date}
+                        </span>
+                      </div>
 
-                    <div className="article-card-footer">
-                      <span className="article-author">
-                        <User size={13} /> {art.author}
-                      </span>
-                      <span className="article-read-link">
-                        Baca Artikel <ArrowRight size={14} />
-                      </span>
+                      <h3 className="article-title">{art.title}</h3>
+                      <p className="article-excerpt">{art.excerpt}</p>
+
+                      <div className="article-card-footer">
+                        <span className="article-author">
+                          <User size={13} /> {art.author}
+                        </span>
+                        <span className="article-read-link">
+                          Baca Artikel <ArrowRight size={14} />
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
+                  </motion.article>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -214,41 +495,51 @@ export default function ArticleGallerySection() {
               ))}
             </div>
 
-            {/* Grid Foto Galeri */}
-            <div className="gallery-masonry-grid">
-              {filteredGallery.map((photo, idx) => (
-                <motion.div
-                  key={photo.id}
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.45, delay: idx * 0.05, ease: EXPO_EASE }}
-                  whileHover={{ scale: 1.025 }}
-                  className="gallery-photo-item"
-                  onClick={() => setSelectedPhoto(photo)}
-                  tabIndex={0}
-                  role="button"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') setSelectedPhoto(photo);
-                  }}
-                >
-                  <img src={photo.image} alt={photo.title} loading="lazy" />
-                  <div className="gallery-photo-scrim" />
+            {/* Render 3D Orbit vs Grid */}
+            {displayMode === 'orbit' ? (
+              <Orbit3DCardStage
+                items={filteredGallery}
+                type="photo"
+                onSelect={(photo) => setSelectedPhoto(photo)}
+                isPaused={isOrbitPaused}
+                onTogglePause={() => setIsOrbitPaused((p) => !p)}
+              />
+            ) : (
+              <div className="gallery-masonry-grid">
+                {filteredGallery.map((photo, idx) => (
+                  <motion.div
+                    key={photo.id}
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.45, delay: idx * 0.05, ease: EXPO_EASE }}
+                    whileHover={{ scale: 1.025 }}
+                    className="gallery-photo-item"
+                    onClick={() => setSelectedPhoto(photo)}
+                    tabIndex={0}
+                    role="button"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') setSelectedPhoto(photo);
+                    }}
+                  >
+                    <img src={photo.image} alt={photo.title} loading="lazy" />
+                    <div className="gallery-photo-scrim" />
 
-                  <div className="gallery-photo-caption">
-                    <span className="photo-cat-badge">{photo.category}</span>
-                    <h4 className="photo-title">{photo.title}</h4>
-                    <span className="photo-loc">
-                      <MapPin size={12} /> {photo.location}
-                    </span>
-                  </div>
+                    <div className="gallery-photo-caption">
+                      <span className="photo-cat-badge">{photo.category}</span>
+                      <h4 className="photo-title">{photo.title}</h4>
+                      <span className="photo-loc">
+                        <MapPin size={12} /> {photo.location}
+                      </span>
+                    </div>
 
-                  <div className="photo-zoom-icon">
-                    <Maximize2 size={16} />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    <div className="photo-zoom-icon">
+                      <Maximize2 size={16} />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -377,4 +668,3 @@ export default function ArticleGallerySection() {
     </section>
   );
 }
-

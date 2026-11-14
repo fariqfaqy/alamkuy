@@ -4224,8 +4224,8 @@ body {
 .orbit-center-glow,
 .globe-aura-glow {
   position: absolute;
-  width: 440px;
-  height: 440px;
+  width: 360px;
+  height: 360px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(22, 163, 74, 0.22) 0%, rgba(34, 197, 94, 0.08) 42%, transparent 72%);
   filter: blur(34px);
@@ -4233,8 +4233,8 @@ body {
 
 .globe-wire-grid {
   position: absolute;
-  width: 540px;
-  height: 540px;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
   transform-style: preserve-3d;
   pointer-events: none;
@@ -4251,30 +4251,30 @@ body {
 }
 
 .ring-equator {
-  width: 540px;
-  height: 540px;
+  width: 420px;
+  height: 420px;
   border: 2px dashed rgba(74, 222, 128, 0.35);
   transform: translate(-50%, -50%) rotateX(80deg);
 }
 
 .ring-tropic-north {
-  width: 430px;
-  height: 430px;
+  width: 340px;
+  height: 340px;
   border-color: rgba(245, 158, 11, 0.25);
-  transform: translate(-50%, calc(-50% - 90px)) rotateX(80deg);
+  transform: translate(-50%, calc(-50% - 68px)) rotateX(80deg);
 }
 
 .ring-tropic-south {
-  width: 430px;
-  height: 430px;
+  width: 340px;
+  height: 340px;
   border-color: rgba(245, 158, 11, 0.25);
-  transform: translate(-50%, calc(-50% + 90px)) rotateX(80deg);
+  transform: translate(-50%, calc(-50% + 68px)) rotateX(80deg);
 }
 
 .globe-meridian-ring {
   position: absolute;
-  width: 540px;
-  height: 540px;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
   border: 1.5px dashed rgba(74, 222, 128, 0.20);
   left: 50%;
@@ -4300,15 +4300,15 @@ body {
   transform-style: preserve-3d;
 }
 
-/* Floating Card Element: TAJAM, JERNIH, TIDAK BUREM */
+/* Floating Card Element: PROPORSIONAL, TAJAM, JERNIH, TIDAK MENIMPA JUDUL */
 .orbit-floating-card,
 .orbit-floating-card.globe-card {
   position: absolute;
   top: 0;
   left: 0;
-  width: 236px;
-  height: 330px;
-  border-radius: 20px;
+  width: 168px;
+  height: 228px;
+  border-radius: 16px;
   overflow: hidden;
   background: #091a12;
   border: 2px solid rgba(255, 255, 255, 0.38);
@@ -4445,44 +4445,48 @@ body {
   justify-content: center;
 }
 
-.orbit-drag-hint {
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-top: 14px;
-  letter-spacing: 0.02em;
+.poker-deal-grid {
+  perspective: 1200px;
+}
+
+.orbit-card-content {
+  padding: 12px 14px;
+}
+
+.orbit-card-title {
+  font-size: 0.92rem;
+  line-height: 1.25;
 }
 
 @media (max-width: 768px) {
   .orbit-3d-stage,
   .globe-3d-stage {
-    height: 450px;
+    height: 350px;
   }
   .orbit-floating-card,
   .orbit-floating-card.globe-card {
-    width: 176px;
-    height: 248px;
-    border-radius: 16px;
+    width: 124px;
+    height: 172px;
+    border-radius: 14px;
   }
   .orbit-card-title {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
   .globe-wire-grid {
-    width: 330px;
-    height: 330px;
+    width: 260px;
+    height: 260px;
   }
   .ring-equator {
-    width: 330px;
-    height: 330px;
+    width: 260px;
+    height: 260px;
   }
   .ring-tropic-north,
   .ring-tropic-south {
-    width: 270px;
-    height: 270px;
+    width: 210px;
+    height: 210px;
   }
   .globe-meridian-ring {
-    width: 330px;
+    width: 260px;
     height: 330px;
   }
 }

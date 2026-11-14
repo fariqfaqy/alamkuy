@@ -55,10 +55,10 @@ function Globe3DCardStage({
   const isMobile = windowWidth <= 768;
   const isTablet = windowWidth > 768 && windowWidth <= 1080;
 
-  // Jari-jari bola 3D (Spherical radius)
-  const radiusX = isMobile ? 180 : isTablet ? 290 : 380;
-  const radiusY = isMobile ? 120 : isTablet ? 180 : 230;
-  const radiusZ = isMobile ? 160 : isTablet ? 250 : 330;
+  // Jari-jari bola 3D proporsional agar kartu tidak menimpa judul di atas
+  const radiusX = isMobile ? 135 : isTablet ? 225 : 310;
+  const radiusY = isMobile ? 70 : isTablet ? 95 : 112;
+  const radiusZ = isMobile ? 120 : isTablet ? 190 : 230;
 
   // Pointer drag & hover interaction handlers
   const handlePointerDown = (e) => {
@@ -233,8 +233,8 @@ function Globe3DCardStage({
           const normZ = (z2 + radiusZ) / (2 * radiusZ);
           const isFront = normZ > 0.52;
           const scale = isMobile
-            ? 0.76 + normZ * 0.28
-            : 0.82 + normZ * 0.32;
+            ? 0.68 + normZ * 0.24
+            : 0.72 + normZ * 0.28;
 
           // Kartu dibuat jernih dan tajam (tanpa efek blur, kontras tinggi)
           const opacity = 0.90 + normZ * 0.10;
@@ -310,12 +310,26 @@ function Globe3DCardStage({
           );
         })}
       </div>
-
-      <p className="orbit-drag-hint">
-        Arahkan kursor atau seret untuk memutar bola globe 3D secara bebas • Klik kartu untuk melihat detail
-      </p>
     </div>
   );
+}
+
+/**
+ * Menghitung posisi awal tumpukan kartu bandar poker di tengah atas grid
+ * agar setiap kartu tampak dibagikan satu per satu ke slot grid masing-masing.
+ */
+function getPokerDealInitial(idx, cols = 3) {
+  const col = idx % cols;
+  const row = Math.floor(idx / cols);
+  const centerCol = (cols - 1) / 2;
+  return {
+    opacity: 0,
+    x: (centerCol - col) * (cols === 3 ? 280 : 210),
+    y: -170 - row * 145,
+    scale: 0.48,
+    rotate: (col - centerCol) * 10 + (idx % 2 === 0 ? -12 : 12),
+    rotateY: 70
+  };
 }
 
 export default function ArticleGallerySection() {
@@ -421,24 +435,47 @@ export default function ArticleGallerySection() {
             transition={{ duration: 0.45 }}
             className="articles-view-wrapper"
           >
-            {/* Render 3D Globe vs Grid (Filter dihapus sesuai permintaan) */}
-            {displayMode === 'globe' ? (
-              <Globe3DCardStage
-                items={ARTICLES_DATA}
-                type="article"
-                onSelect={(art) => setSelectedArticle(art)}
-              />
-            ) : (
-              <div className="articles-grid">
-                {ARTICLES_DATA.map((art, idx) => (
-                  <motion.article
-                    key={art.id}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={{ duration: 0.5, delay: idx * 0.06, ease: EXPO_EASE }}
-                    whileHover={{ y: -6 }}
-                    className="article-card"
+            {/* Render 3D Globe vs Grid Klasik (Animasi Bandar Poker Membagikan Kartu) */}
+            <AnimatePresence mode="wait">
+              {displayMode === 'globe' ? (
+                <motion.div
+                  key="artikel-globe"
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.32 }}
+                >
+                  <Globe3DCardStage
+                    items={ARTICLES_DATA}
+                    type="article"
+                    onSelect={(art) => setSelectedArticle(art)}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="artikel-grid"
+                  className="articles-grid poker-deal-grid"
+                  exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                >
+                  {ARTICLES_DATA.map((art, idx) => (
+                    <motion.article
+                      key={art.id}
+                      initial={getPokerDealInitial(idx, 3)}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        rotate: 0,
+                        rotateY: 0
+                      }}
+                      transition={{
+                        duration: 0.56,
+                        delay: idx * 0.11,
+                        ease: EXPO_EASE
+                      }}
+                      whileHover={{ y: -6 }}
+                      className="article-card"
                     onClick={() => setSelectedArticle(art)}
                     tabIndex={0}
                     role="button"
@@ -475,8 +512,9 @@ export default function ArticleGallerySection() {
                     </div>
                   </motion.article>
                 ))}
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
 
@@ -490,24 +528,47 @@ export default function ArticleGallerySection() {
             transition={{ duration: 0.45 }}
             className="gallery-view-wrapper"
           >
-            {/* Render 3D Globe vs Grid (Filter dihapus sesuai permintaan) */}
-            {displayMode === 'globe' ? (
-              <Globe3DCardStage
-                items={GALLERY_DATA}
-                type="photo"
-                onSelect={(photo) => setSelectedPhoto(photo)}
-              />
-            ) : (
-              <div className="gallery-masonry-grid">
-                {GALLERY_DATA.map((photo, idx) => (
-                  <motion.div
-                    key={photo.id}
-                    initial={{ opacity: 0, scale: 0.94 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={{ duration: 0.45, delay: idx * 0.05, ease: EXPO_EASE }}
-                    whileHover={{ scale: 1.025 }}
-                    className="gallery-photo-item"
+            {/* Render 3D Globe vs Grid Klasik (Animasi Bandar Poker Membagikan Kartu) */}
+            <AnimatePresence mode="wait">
+              {displayMode === 'globe' ? (
+                <motion.div
+                  key="galeri-globe"
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.32 }}
+                >
+                  <Globe3DCardStage
+                    items={GALLERY_DATA}
+                    type="photo"
+                    onSelect={(photo) => setSelectedPhoto(photo)}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="galeri-grid"
+                  className="gallery-masonry-grid poker-deal-grid"
+                  exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                >
+                  {GALLERY_DATA.map((photo, idx) => (
+                    <motion.div
+                      key={photo.id}
+                      initial={getPokerDealInitial(idx, 4)}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        rotate: 0,
+                        rotateY: 0
+                      }}
+                      transition={{
+                        duration: 0.56,
+                        delay: idx * 0.11,
+                        ease: EXPO_EASE
+                      }}
+                      whileHover={{ scale: 1.025 }}
+                      className="gallery-photo-item"
                     onClick={() => setSelectedPhoto(photo)}
                     tabIndex={0}
                     role="button"
@@ -531,8 +592,9 @@ export default function ArticleGallerySection() {
                     </div>
                   </motion.div>
                 ))}
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
 

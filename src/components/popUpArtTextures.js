@@ -646,3 +646,4 @@ export function createStandeeTexture(kind, extras) {
 
   return toTexture(canvas);
 }
+

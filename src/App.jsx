@@ -50,6 +50,42 @@ export default function App() {
     );
   };
 
+  // Mencegah blok teks biru, drag gambar, dan penyalinan konten di luar form input
+  useEffect(() => {
+    const isEditableTarget = (target) => {
+      if (!(target instanceof Element)) return false;
+      const tag = target.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+    };
+
+    const handleBlockEvent = (e) => {
+      if (!isEditableTarget(e.target)) {
+        e.preventDefault();
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (isEditableTarget(e.target)) return;
+      if ((e.ctrlKey || e.metaKey) && ['c', 'x', 'a', 'u'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('copy', handleBlockEvent);
+    document.addEventListener('cut', handleBlockEvent);
+    document.addEventListener('selectstart', handleBlockEvent);
+    document.addEventListener('dragstart', handleBlockEvent);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('copy', handleBlockEvent);
+      document.removeEventListener('cut', handleBlockEvent);
+      document.removeEventListener('selectstart', handleBlockEvent);
+      document.removeEventListener('dragstart', handleBlockEvent);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Automatic section tracking per halaman
   useEffect(() => {
     const sections = [

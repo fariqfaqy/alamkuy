@@ -345,15 +345,12 @@ export default function ParkJournalBook({ parks, onDonatePark }) {
 
   const triggerPageFlip = (targetIdx, dir) => {
     if (targetIdx === pageIndex) return;
+    setPageIndex(targetIdx);
     if (!isBookOpen) {
-      setPageIndex(targetIdx);
       setIsBookOpen(true);
       return;
     }
     setFlipState((prev) => ({ id: prev.id + 1, dir }));
-    setTimeout(() => {
-      setPageIndex(targetIdx);
-    }, 280);
   };
 
   const handleNextPage = () => {

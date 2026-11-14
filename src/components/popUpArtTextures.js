@@ -6,18 +6,37 @@ import * as THREE from 'three';
  * vegetasi, jembatan, dan standee satwa/peneliti yang berbeda-beda.
  */
 
-function addPaperGrain(ctx, width, height, alpha = 0.045) {
-  const imgData = ctx.getImageData(0, 0, width, height);
+let cachedGrainPattern = null;
+
+function getPaperGrainPattern(ctx) {
+  if (cachedGrainPattern) return cachedGrainPattern;
+  const tile = document.createElement('canvas');
+  tile.width = 128;
+  tile.height = 128;
+  const tctx = tile.getContext('2d');
+  const imgData = tctx.createImageData(128, 128);
   const data = imgData.data;
   for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 3] < 20) continue;
-    const noise = ((Math.sin(i * 12.9898) * 43758.5453) % 1) * 28 - 14;
-    const shift = noise * alpha * 12;
-    data[i] = Math.max(0, Math.min(255, data[i] + shift));
-    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + shift));
-    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + shift));
+    const v = ((Math.sin(i * 12.9898) * 43758.5453) % 1) * 255;
+    data[i] = v > 128 ? 255 : 40;
+    data[i + 1] = v > 128 ? 250 : 35;
+    data[i + 2] = v > 128 ? 240 : 25;
+    data[i + 3] = 10;
   }
-  ctx.putImageData(imgData, 0, 0);
+  tctx.putImageData(imgData, 0, 0);
+  cachedGrainPattern = ctx.createPattern(tile, 'repeat');
+  return cachedGrainPattern;
+}
+
+function addPaperGrain(ctx, width, height, alpha = 0.045) {
+  const pattern = getPaperGrainPattern(ctx);
+  if (!pattern) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'source-atop';
+  ctx.globalAlpha = Math.min(1, alpha * 14);
+  ctx.fillStyle = pattern;
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
 }
 
 function createCanvas(w, h) {

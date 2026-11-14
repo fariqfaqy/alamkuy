@@ -80,7 +80,7 @@ export default function PopUpBook3DCanvas({
     stateRef.current.isBookOpen = isBookOpen;
   }, [isBookOpen]);
 
-  // Sinkronkan perubahan bab Taman Nasional & picu animasi balik halaman 3D
+  // Sinkronkan perubahan bab Taman Nasional & picu animasi balik halaman 3D sekali jalan yang halus
   useEffect(() => {
     if (!sceneRefs.current) return;
     const { updateTextures } = sceneRefs.current;
@@ -88,10 +88,8 @@ export default function PopUpBook3DCanvas({
     if (flipTriggerId > 0) {
       stateRef.current.flipProgress = 0;
       stateRef.current.flipDir = flipDirection || 'next';
-      // Lipat diorama sejenak lalu buka kembali setelah halaman membalik
-      setTimeout(() => {
-        updateTextures(park, extras);
-      }, 280);
+      stateRef.current.textureSwapped = false;
+      stateRef.current.pendingChapter = { park, extras };
     } else {
       updateTextures(park, extras);
     }
@@ -354,36 +352,53 @@ export default function PopUpBook3DCanvas({
       { item: standeeMushroom, delay: 0.48 }
     ];
 
+    // Cache tekstur per bab agar pergantian halaman instan tanpa stutter
+    const textureCache = new Map();
+
+    const getChapterTextures = (activePark, activeExtras) => {
+      const key = activePark?.id || 'default';
+      if (textureCache.has(key)) {
+        return textureCache.get(key);
+      }
+      const bundle = {
+        leftPage: createOpenPageTexture('left', activePark, activeExtras),
+        rightPage: createOpenPageTexture('right', activePark, activeExtras),
+        backClouds: createBackCloudsLayerTexture(activePark, activeExtras),
+        midVillage: createMidBackVillageTexture(activePark, activeExtras),
+        hill: createArchedHillTexture(activePark, activeExtras),
+        pondFlora: createPondFloraLayerTexture(activePark, activeExtras),
+        bridge: createBridgeStripTexture(activePark, activeExtras),
+        fauna: createStandeeTexture('fauna', activePark, activeExtras),
+        ranger: createStandeeTexture('ranger', activePark, activeExtras),
+        mushroom: createStandeeTexture('mushroom', activePark, activeExtras)
+      };
+      textureCache.set(key, bundle);
+      return bundle;
+    };
+
     // Fungsi pembaruan tekstur sesuai bab Taman Nasional
     const updateTextures = (activePark, activeExtras) => {
-      const disposeAndSet = (mat, newTex) => {
-        if (mat.map && mat.map !== newTex) mat.map.dispose();
-        mat.map = newTex;
-        mat.needsUpdate = true;
+      const setTex = (mat, tex) => {
+        if (mat.map !== tex) {
+          mat.map = tex;
+          mat.needsUpdate = true;
+        }
       };
 
-      disposeAndSet(leftPageMat, createOpenPageTexture('left', activePark, activeExtras));
-      disposeAndSet(rightPageMat, createOpenPageTexture('right', activePark, activeExtras));
-      disposeAndSet(layerBackClouds.mat, createBackCloudsLayerTexture(activePark, activeExtras));
-      disposeAndSet(layerMidVillage.mat, createMidBackVillageTexture(activePark, activeExtras));
-
-      const hillTex = createArchedHillTexture(activePark, activeExtras);
-      disposeAndSet(layerArchedHill.mat, hillTex);
-      hillWingLeft.mat.map = hillTex;
-      hillWingLeft.mat.needsUpdate = true;
-      hillWingRight.mat.map = hillTex;
-      hillWingRight.mat.needsUpdate = true;
-
-      disposeAndSet(layerPondFlora.mat, createPondFloraLayerTexture(activePark, activeExtras));
-
-      const bridgeTex = createBridgeStripTexture(activePark, activeExtras);
-      disposeAndSet(bridgeLeft.mat, bridgeTex);
-      bridgeRight.mat.map = bridgeTex;
-      bridgeRight.mat.needsUpdate = true;
-
-      disposeAndSet(standeeFauna.mat, createStandeeTexture('fauna', activePark, activeExtras));
-      disposeAndSet(standeeRanger.mat, createStandeeTexture('ranger', activePark, activeExtras));
-      disposeAndSet(standeeMushroom.mat, createStandeeTexture('mushroom', activePark, activeExtras));
+      const tex = getChapterTextures(activePark, activeExtras);
+      setTex(leftPageMat, tex.leftPage);
+      setTex(rightPageMat, tex.rightPage);
+      setTex(layerBackClouds.mat, tex.backClouds);
+      setTex(layerMidVillage.mat, tex.midVillage);
+      setTex(layerArchedHill.mat, tex.hill);
+      setTex(hillWingLeft.mat, tex.hill);
+      setTex(hillWingRight.mat, tex.hill);
+      setTex(layerPondFlora.mat, tex.pondFlora);
+      setTex(bridgeLeft.mat, tex.bridge);
+      setTex(bridgeRight.mat, tex.bridge);
+      setTex(standeeFauna.mat, tex.fauna);
+      setTex(standeeRanger.mat, tex.ranger);
+      setTex(standeeMushroom.mat, tex.mushroom);
 
       pondMat.color.set(activeExtras.dioramaTheme.waterTop);
     };
@@ -526,10 +541,15 @@ export default function PopUpBook3DCanvas({
       leftWingGroup.rotation.z = -(1 - st.openProgress) * Math.PI;
       rightWingGroup.rotation.z = 0;
 
-      // Animasi lipatan diorama pop-up (terlipat saat buku menutup atau sedang membalik halaman)
+      // Animasi lipatan diorama pop-up (terlipat halus lalu mekar kembali dalam satu alur balik halaman)
       const isFlipping = st.flipProgress >= 0;
-      const targetUnfold = st.isBookOpen && !isFlipping ? 1 : 0;
-      st.unfoldProgress += (targetUnfold - st.unfoldProgress) * 0.11;
+      const targetUnfold = !st.isBookOpen
+        ? 0
+        : isFlipping && st.flipProgress < 0.45
+          ? 0
+          : 1;
+      const unfoldLerp = isFlipping ? Math.min(1, dt * 10) : Math.min(1, dt * 6.5);
+      st.unfoldProgress += (targetUnfold - st.unfoldProgress) * unfoldLerp;
 
       popUpLayers.forEach(({ item, delay }, idx) => {
         const localProgress = Math.max(
@@ -548,15 +568,25 @@ export default function PopUpBook3DCanvas({
       pondMesh.scale.setScalar(0.01 + 0.99 * st.unfoldProgress);
       pondMesh.visible = st.unfoldProgress > 0.05;
 
-      // Animasi 3D Balik Halaman Melingkar (Page Curl Mesh)
+      // Animasi 3D Balik Halaman Melingkar (Satu Gerakan Halus Ease-In-Out)
       if (isFlipping) {
-        st.flipProgress += dt * 1.45;
+        st.flipProgress += dt / 0.78;
+        if (st.flipProgress >= 0.45 && !st.textureSwapped && st.pendingChapter) {
+          st.textureSwapped = true;
+          updateTextures(st.pendingChapter.park, st.pendingChapter.extras);
+          st.pendingChapter = null;
+        }
         if (st.flipProgress >= 1) {
           st.flipProgress = -1;
           flipSheetMesh.visible = false;
         } else {
           flipSheetMesh.visible = true;
-          const p = st.flipDir === 'next' ? st.flipProgress : 1 - st.flipProgress;
+          const rawT = Math.min(1, st.flipProgress);
+          const eased =
+            rawT < 0.5
+              ? 4 * rawT * rawT * rawT
+              : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+          const p = st.flipDir === 'next' ? eased : 1 - eased;
           const sweepAngle = p * Math.PI;
           const posAttr = flipGeo.attributes.position;
 
@@ -564,11 +594,11 @@ export default function PopUpBook3DCanvas({
             const bx = flipBasePos[i * 3];
             const bz = flipBasePos[i * 3 + 2];
             const u = bx / 4.12;
-            const bend = Math.sin(p * Math.PI) * Math.sin(u * Math.PI) * 0.65;
-            const angle = sweepAngle + bend * 0.45;
+            const bend = Math.sin(p * Math.PI) * Math.sin(u * Math.PI) * 0.58;
+            const angle = sweepAngle + bend * 0.42;
 
             const nx = Math.cos(angle) * bx;
-            const ny = Math.sin(angle) * bx + Math.sin(p * Math.PI) * 0.25;
+            const ny = Math.sin(angle) * bx + Math.sin(p * Math.PI) * 0.22;
             posAttr.setXYZ(i, nx, ny, bz);
           }
           posAttr.needsUpdate = true;

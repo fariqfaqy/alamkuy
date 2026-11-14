@@ -124,14 +124,26 @@ export default function App() {
 
   const scrollToSection = (sectionId, navKey) => {
     setActiveNav(navKey);
-    setMobileMenuOpen(false);
-    if (sectionId === 'top' || sectionId === 'section-beranda') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+    const wasMobileOpen = mobileMenuOpen;
+    if (wasMobileOpen) {
+      setMobileMenuOpen(false);
     }
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const performScroll = () => {
+      if (sectionId === 'top' || sectionId === 'section-beranda') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    if (wasMobileOpen) {
+      window.setTimeout(performScroll, 60);
+    } else {
+      performScroll();
     }
   };
 
@@ -264,9 +276,10 @@ export default function App() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.2, ease: EXPO_EASE }}
               className="mobile-nav-drawer"
             >
               <button

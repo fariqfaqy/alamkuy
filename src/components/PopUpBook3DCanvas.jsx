@@ -110,9 +110,9 @@ export default function PopUpBook3DCanvas({
       powerPreference: 'high-performance'
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.08;
 
@@ -126,8 +126,9 @@ export default function PopUpBook3DCanvas({
     const sunLight = new THREE.DirectionalLight(0xfff4e0, 1.65);
     sunLight.position.set(5.5, 9.5, 6.5);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
+    const shadowRes = window.innerWidth < 768 ? 512 : 1024;
+    sunLight.shadow.mapSize.width = shadowRes;
+    sunLight.shadow.mapSize.height = shadowRes;
     sunLight.shadow.camera.near = 1;
     sunLight.shadow.camera.far = 26;
     const d = 6.5;
@@ -452,12 +453,20 @@ export default function PopUpBook3DCanvas({
 
     // 8. Loop Animasi 60 FPS (Fisika Lipatan Pop-Up, Halaman Membalik, & Orbit Halus)
     let animId = null;
-    const clock = new THREE.Clock();
+    let isVisible = true;
+    const startTimeMs = performance.now();
+    let lastTimeMs = startTimeMs;
 
     const animate = () => {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
       animId = requestAnimationFrame(animate);
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const elapsed = clock.getElapsedTime();
+      const nowMs = performance.now();
+      const dt = Math.min((nowMs - lastTimeMs) / 1000, 0.05);
+      lastTimeMs = nowMs;
+      const elapsed = (nowMs - startTimeMs) / 1000;
       const st = stateRef.current;
 
       // Inersia kamera setelah drag dilepas
@@ -540,10 +549,26 @@ export default function PopUpBook3DCanvas({
       renderer.render(scene, camera);
     };
 
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        isVisible = entry.isIntersecting;
+        if (isVisible && animId === null) {
+          lastTimeMs = performance.now();
+          animate();
+        }
+      },
+      { rootMargin: '120px 0px' }
+    );
+    visibilityObserver.observe(container);
+
     animate();
 
     return () => {
+      isVisible = false;
       if (animId) cancelAnimationFrame(animId);
+      visibilityObserver.disconnect();
       domEl.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
@@ -561,3 +586,4 @@ export default function PopUpBook3DCanvas({
     />
   );
 }
+

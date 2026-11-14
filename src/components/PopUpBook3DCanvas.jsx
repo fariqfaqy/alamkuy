@@ -351,33 +351,33 @@ export default function PopUpBook3DCanvas({
     // Fungsi pembaruan tekstur sesuai bab Taman Nasional
     const updateTextures = (activePark, activeExtras) => {
       const disposeAndSet = (mat, newTex) => {
-        if (mat.map) mat.map.dispose();
+        if (mat.map && mat.map !== newTex) mat.map.dispose();
         mat.map = newTex;
         mat.needsUpdate = true;
       };
 
       disposeAndSet(leftPageMat, createOpenPageTexture('left', activePark, activeExtras));
       disposeAndSet(rightPageMat, createOpenPageTexture('right', activePark, activeExtras));
-      disposeAndSet(layerBackClouds.mat, createBackCloudsLayerTexture(activeExtras));
-      disposeAndSet(layerMidVillage.mat, createMidBackVillageTexture(activeExtras));
+      disposeAndSet(layerBackClouds.mat, createBackCloudsLayerTexture(activePark, activeExtras));
+      disposeAndSet(layerMidVillage.mat, createMidBackVillageTexture(activePark, activeExtras));
 
-      const hillTex = createArchedHillTexture(activeExtras);
+      const hillTex = createArchedHillTexture(activePark, activeExtras);
       disposeAndSet(layerArchedHill.mat, hillTex);
       hillWingLeft.mat.map = hillTex;
       hillWingLeft.mat.needsUpdate = true;
       hillWingRight.mat.map = hillTex;
       hillWingRight.mat.needsUpdate = true;
 
-      disposeAndSet(layerPondFlora.mat, createPondFloraLayerTexture(activeExtras));
+      disposeAndSet(layerPondFlora.mat, createPondFloraLayerTexture(activePark, activeExtras));
 
-      const bridgeTex = createBridgeStripTexture();
+      const bridgeTex = createBridgeStripTexture(activePark, activeExtras);
       disposeAndSet(bridgeLeft.mat, bridgeTex);
       bridgeRight.mat.map = bridgeTex;
       bridgeRight.mat.needsUpdate = true;
 
-      disposeAndSet(standeeFauna.mat, createStandeeTexture('fauna', activeExtras));
-      disposeAndSet(standeeRanger.mat, createStandeeTexture('ranger', activeExtras));
-      disposeAndSet(standeeMushroom.mat, createStandeeTexture('mushroom', activeExtras));
+      disposeAndSet(standeeFauna.mat, createStandeeTexture('fauna', activePark, activeExtras));
+      disposeAndSet(standeeRanger.mat, createStandeeTexture('ranger', activePark, activeExtras));
+      disposeAndSet(standeeMushroom.mat, createStandeeTexture('mushroom', activePark, activeExtras));
 
       pondMat.color.set(activeExtras.dioramaTheme.waterTop);
     };

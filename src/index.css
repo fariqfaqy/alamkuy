@@ -6022,4 +6022,108 @@ a.channel-item:hover {
   }
 }
 
+/* =========================================================
+   WEBGL THREE.JS 3D POP-UP STAGE & CHAPTER INFO DECK
+   ========================================================= */
+.popup-webgl-stage-box {
+  position: relative;
+  width: 100%;
+  max-width: 1020px;
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-webgl-canvas-wrap {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.popup-webgl-canvas-wrap:active {
+  cursor: grabbing;
+}
+
+.popup-orbit-hint-pill {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(253, 250, 243, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(25, 48, 38, 0.16);
+  color: #1e352a;
+  font-size: 0.72rem;
+  font-weight: 700;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+.popup-info-deck {
+  width: 100%;
+  max-width: 1020px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: -12px;
+}
+
+.popup-info-card {
+  background: rgba(253, 250, 243, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #dfd3bc;
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 10px 26px rgba(15, 25, 20, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.popup-info-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1b4332;
+  margin: 0;
+}
+
+.popup-info-desc {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #362f26;
+  margin: 2px 0 0;
+}
+
+.inline-icon-tip {
+  display: inline;
+  vertical-align: -2px;
+  color: #d97706;
+}
+
+@media (max-width: 768px) {
+  .popup-webgl-stage-box {
+    height: 360px;
+  }
+  .popup-orbit-hint-pill {
+    font-size: 0.64rem;
+    padding: 4px 10px;
+  }
+  .popup-info-deck {
+    grid-template-columns: 1fr;
+    margin-top: 4px;
+  }
+}
+
+
 

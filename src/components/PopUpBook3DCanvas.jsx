@@ -45,9 +45,15 @@ export default function PopUpBook3DCanvas({
   isBookOpen,
   flipDirection,
   flipTriggerId,
-  onToggleBook
+  onToggleBook,
+  onPrevPage,
+  onNextPage
 }) {
   const mountRef = useRef(null);
+  const callbacksRef = useRef({ onToggleBook, onPrevPage, onNextPage });
+  useEffect(() => {
+    callbacksRef.current = { onToggleBook, onPrevPage, onNextPage };
+  }, [onToggleBook, onPrevPage, onNextPage]);
   const stateRef = useRef({
     isBookOpen,
     openProgress: isBookOpen ? 1 : 0,
@@ -421,11 +427,35 @@ export default function PopUpBook3DCanvas({
       }
     };
 
-    const onPointerUp = () => {
+    const raycaster = new THREE.Raycaster();
+    const pointerNdc = new THREE.Vector2();
+
+    const onPointerUp = (e) => {
       if (!stateRef.current.isDragging) return;
       stateRef.current.isDragging = false;
-      if (!stateRef.current.hasDragged && !stateRef.current.isBookOpen && onToggleBook) {
-        onToggleBook();
+      if (!stateRef.current.hasDragged) {
+        if (!stateRef.current.isBookOpen) {
+          callbacksRef.current.onToggleBook?.();
+          return;
+        }
+        const rect = domEl.getBoundingClientRect();
+        pointerNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        pointerNdc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(pointerNdc, camera);
+        const hits = raycaster.intersectObjects([leftPageMesh, rightPageMesh], false);
+        if (hits.length > 0) {
+          if (hits[0].object === leftPageMesh) {
+            callbacksRef.current.onPrevPage?.();
+          } else {
+            callbacksRef.current.onNextPage?.();
+          }
+        } else if (Math.abs(pointerNdc.x) > 0.08) {
+          if (pointerNdc.x < 0) {
+            callbacksRef.current.onPrevPage?.();
+          } else {
+            callbacksRef.current.onNextPage?.();
+          }
+        }
       }
     };
 

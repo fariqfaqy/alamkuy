@@ -14,8 +14,7 @@ import {
   Layers,
   Leaf,
   Camera,
-  X,
-  Move3d
+  X
 } from 'lucide-react';
 import PopUpBook3DCanvas from './PopUpBook3DCanvas';
 
@@ -398,34 +397,10 @@ export default function ParkJournalBook({ parks, onDonatePark }) {
                 : 'Buku Pop-Up Tertutup • Klik Buku atau Tombol Buka untuk Memekarkan Diorama 3D'}
             </span>
           </p>
-
-          {/* Navigasi Cepat Bab Taman Nasional */}
-          <div className="popup-chapter-tabs" role="tablist" aria-label="Pilih Bab Taman Nasional">
-            {parks.map((parkItem, idx) => (
-              <button
-                key={parkItem.id}
-                type="button"
-                role="tab"
-                aria-selected={pageIndex === idx}
-                onClick={() => triggerPageFlip(idx, idx > pageIndex ? 'next' : 'prev')}
-                className={`popup-chapter-tab ${pageIndex === idx ? 'active' : ''}`}
-              >
-                <span className="chapter-num">0{idx + 1}</span>
-                <span className="chapter-name">
-                  {parkItem.name.replace('Taman Nasional ', 'TN ')}
-                </span>
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* PANGGUNG WEBGL THREE.JS 3D POP-UP BOOK NYATA */}
         <div className="popup-webgl-stage-box">
-          <div className="popup-orbit-hint-pill">
-            <Move3d size={14} />
-            <span>Seret di area buku untuk memutar sudut kamera 3D secara bebas</span>
-          </div>
-
           <PopUpBook3DCanvas
             park={currentPark}
             extras={extras}
@@ -433,6 +408,8 @@ export default function ParkJournalBook({ parks, onDonatePark }) {
             flipDirection={flipState.dir}
             flipTriggerId={flipState.id}
             onToggleBook={() => setIsBookOpen((o) => !o)}
+            onPrevPage={handlePrevPage}
+            onNextPage={handleNextPage}
           />
         </div>
 

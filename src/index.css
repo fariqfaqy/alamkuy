@@ -5206,3 +5206,820 @@ a.channel-item:hover {
   }
 }
 
+/* =========================================================
+   3D POP-UP DIORAMA BOOK (ATLAS 3D BUKU POP-UP KERAJINAN KERTAS)
+   ========================================================= */
+.popup-book-section {
+  background: radial-gradient(circle at 50% 38%, #dce4e8 0%, #96a5b0 58%, #6d7c88 100%);
+  padding: 86px 20px 36px;
+}
+
+.popup-atlas-container {
+  max-width: 1180px;
+  gap: 14px;
+}
+
+.popup-book-section .journal-title {
+  color: #13231c;
+}
+
+.popup-book-section .journal-subtitle {
+  color: #2c4237;
+}
+
+/* Chapter Quick Selector Pills */
+.popup-chapter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.popup-chapter-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(25, 48, 38, 0.18);
+  background: rgba(250, 246, 238, 0.78);
+  backdrop-filter: blur(6px);
+  color: #1e352a;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.popup-chapter-tab:hover {
+  background: #fdfaf3;
+  transform: translateY(-1px);
+  border-color: #a83820;
+}
+
+.popup-chapter-tab.active {
+  background: #a83820;
+  border-color: #f4ebd9;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(168, 56, 32, 0.35);
+}
+
+.popup-chapter-tab .chapter-num {
+  font-size: 0.68rem;
+  opacity: 0.8;
+  font-weight: 800;
+}
+
+/* 3D Pop-Up Stage */
+.popup-book-3d-stage {
+  position: relative;
+  width: 100%;
+  min-height: 550px;
+  perspective: 1800px;
+  perspective-origin: 50% 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0 18px;
+  user-select: none;
+}
+
+/* Closed 3D Terracotta Hardcover Tome */
+.popup-closed-tome {
+  position: relative;
+  width: 390px;
+  height: 470px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.tome-spine-left {
+  position: absolute;
+  left: -18px;
+  top: 4px;
+  bottom: 4px;
+  width: 24px;
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(90deg, #6e2010 0%, #a83820 65%, #7c2513 100%);
+  box-shadow: -8px 18px 34px rgba(0, 0, 0, 0.42);
+}
+
+.tome-paper-block-right {
+  position: absolute;
+  right: -12px;
+  top: 10px;
+  bottom: 10px;
+  width: 18px;
+  border-radius: 0 4px 4px 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #faf6ee 0px,
+    #faf6ee 2px,
+    #ddd3c0 2px,
+    #ddd3c0 4px
+  );
+  box-shadow: 16px 26px 48px rgba(0, 0, 0, 0.45);
+}
+
+.tome-front-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 18px 18px 6px;
+  background: linear-gradient(145deg, #b84227 0%, #872914 100%);
+  border: 2px solid rgba(255, 238, 214, 0.28);
+  padding: 22px;
+  box-shadow:
+    0 32px 65px rgba(15, 23, 30, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.32);
+}
+
+.tome-gold-frame {
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(244, 235, 217, 0.55);
+  border-radius: 12px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fdfaf3;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 70%);
+}
+
+.tome-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #fde68a;
+  margin-bottom: 8px;
+}
+
+.tome-gold-frame h3 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  line-height: 1.06;
+  color: #fffbeb;
+  margin-bottom: 6px;
+}
+
+.tome-gold-frame p {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fed7aa;
+  margin-bottom: 16px;
+}
+
+.tome-cover-emblem {
+  width: 100%;
+  height: 205px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #f4ebd9;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.36);
+  margin-bottom: auto;
+}
+
+.tome-cover-emblem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tome-open-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: #f4ebd9;
+  color: #7c2513;
+  font-size: 0.8rem;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   OPEN 3D POP-UP BOOK ASSEMBLY (TABLETOP PERSPECTIVE + DIORAMA)
+   ========================================================= */
+.popup-open-book-assembly {
+  position: relative;
+  width: 940px;
+  height: 540px;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* 1. Multi-Tier Standing 3D Paper-Cut Diorama Rig */
+.popup-diorama-rig {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 880px;
+  height: 365px;
+  transform: translateX(-50%) translateZ(20px);
+  transform-style: preserve-3d;
+  z-index: 35;
+  pointer-events: none;
+}
+
+.popup-paper-layer {
+  position: absolute;
+  inset: 0;
+  transform-origin: bottom center;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* 3D Z-Depth Separation for Each Standing Paper Cutout Plane */
+.popup-paper-layer.layer-z-1 {
+  transform: translateZ(-75px) translateY(-18px) scale(0.98);
+  z-index: 10;
+}
+
+.popup-paper-layer.layer-z-2 {
+  transform: translateZ(-36px) translateY(-10px) scale(0.99);
+  z-index: 20;
+}
+
+.popup-paper-layer.layer-z-3 {
+  transform: translateZ(0px) translateY(-4px);
+  z-index: 30;
+}
+
+.popup-paper-layer.layer-z-4 {
+  transform: translateZ(36px) translateY(4px);
+  z-index: 40;
+}
+
+.popup-paper-layer.layer-z-5 {
+  transform: translateZ(72px) translateY(12px);
+  z-index: 50;
+}
+
+.popup-layer-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+/* Interactive Floating Badges Above Pop-Up Sculpture */
+.popup-floating-badges {
+  position: absolute;
+  top: 10px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+  z-index: 80;
+}
+
+.popup-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(253, 250, 243, 0.94);
+  border: 1.5px solid #d5c7b2;
+  color: #2b4538;
+  font-size: 0.74rem;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.popup-photo-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #1b4332;
+  border: 1.5px solid #f4ebd9;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.popup-photo-trigger-btn:hover {
+  background: #a83820;
+  transform: scale(1.05);
+}
+
+/* 2. Open Book Base Table Platform (Tilted 3D Book Pages & Hardcover) */
+.popup-book-table-base {
+  position: relative;
+  width: 920px;
+  height: 255px;
+  transform: rotateX(22deg);
+  transform-origin: bottom center;
+  transform-style: preserve-3d;
+  z-index: 20;
+}
+
+/* Terracotta-Red Hardcover Base Extending Under the Paper Stack */
+.popup-hardcover-board {
+  position: absolute;
+  left: -18px;
+  right: -18px;
+  top: 14px;
+  bottom: -16px;
+  display: flex;
+  align-items: stretch;
+  z-index: 1;
+  filter: drop-shadow(0 32px 44px rgba(12, 20, 28, 0.58));
+}
+
+.hardcover-wing-left {
+  flex: 1;
+  background: linear-gradient(180deg, #9a341c 0%, #b84227 50%, #7f2410 100%);
+  border-radius: 6px 0 0 8px;
+  border: 2px solid #c95338;
+  transform: skewY(1.2deg);
+}
+
+.hardcover-spine-hinge {
+  width: 48px;
+  background: radial-gradient(circle at 50% 100%, #5c190b 0%, #8f2d16 70%);
+  border-bottom: 4px solid #4a1207;
+  border-radius: 0 0 18px 18px;
+  transform: translateY(6px);
+}
+
+.hardcover-wing-right {
+  flex: 1;
+  background: linear-gradient(180deg, #9a341c 0%, #b84227 50%, #7f2410 100%);
+  border-radius: 0 6px 8px 0;
+  border: 2px solid #c95338;
+  transform: skewY(-1.2deg);
+}
+
+/* Multi-Sheet Fanned Paper Stack Wedges on Left, Right, and Bottom Fore-Edge */
+.popup-paper-wedge {
+  position: absolute;
+  top: 6px;
+  bottom: -6px;
+  width: 49.5%;
+  z-index: 4;
+  background: repeating-linear-gradient(
+    180deg,
+    #fdfaf3 0px,
+    #fdfaf3 2.5px,
+    #dfd5c2 2.5px,
+    #dfd5c2 4.5px
+  );
+  border: 1px solid #cbbda6;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.popup-paper-wedge.wedge-left {
+  left: -8px;
+  border-radius: 4px 0 0 6px;
+  transform: skewY(1.5deg);
+}
+
+.popup-paper-wedge.wedge-right {
+  right: -8px;
+  border-radius: 0 4px 6px 0;
+  transform: skewY(-1.5deg);
+}
+
+/* Open Cream Book Pages Spread (Left & Right Wings) */
+.popup-open-pages-spread {
+  position: relative;
+  width: 100%;
+  height: 236px;
+  display: flex;
+  z-index: 10;
+  transform-style: preserve-3d;
+}
+
+.popup-open-page {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  padding: 58px 28px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+  overflow: hidden;
+  transition: filter 0.25s ease;
+}
+
+.popup-open-page:hover {
+  filter: brightness(1.02);
+}
+
+.page-wing-left {
+  background: linear-gradient(
+    90deg,
+    #f6f0e2 0%,
+    #fdfaf3 72%,
+    #ece2ce 94%,
+    #d4c6ae 100%
+  );
+  border-radius: 8px 0 0 4px;
+  border-top: 1px solid #e6dcc8;
+  border-left: 2px solid #dfd3bc;
+  border-bottom: 3px solid #d5c7ae;
+  transform-origin: right center;
+  transform: rotateY(4deg);
+  box-shadow: -10px 12px 26px rgba(0, 0, 0, 0.16);
+}
+
+.page-wing-right {
+  background: linear-gradient(
+    90deg,
+    #d4c6ae 0%,
+    #ece2ce 6%,
+    #fdfaf3 28%,
+    #f6f0e2 100%
+  );
+  border-radius: 0 8px 4px 0;
+  border-top: 1px solid #e6dcc8;
+  border-right: 2px solid #dfd3bc;
+  border-bottom: 3px solid #d5c7ae;
+  transform-origin: left center;
+  transform: rotateY(-4deg);
+  box-shadow: 10px 12px 26px rgba(0, 0, 0, 0.16);
+}
+
+/* Painted Green/Sage Paper Diorama Base Lawn on the Upper Half of Each Open Page */
+.page-diorama-lawn {
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 68px;
+  pointer-events: none;
+}
+
+.lawn-left {
+  background: linear-gradient(
+    180deg,
+    #84a98c 0%,
+    #a3b88c 55%,
+    rgba(221, 229, 182, 0.45) 88%,
+    transparent 100%
+  );
+  border-radius: 0 0 40% 24%;
+}
+
+.lawn-right {
+  background: linear-gradient(
+    180deg,
+    #749c75 0%,
+    #adc178 55%,
+    rgba(221, 229, 182, 0.45) 88%,
+    transparent 100%
+  );
+  border-radius: 0 0 24% 40%;
+}
+
+/* Central Book Spine Crease (V-Gutter) */
+.popup-center-gutter {
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #9c8d76 0%,
+    #5c503f 50%,
+    #9c8d76 100%
+  );
+  z-index: 18;
+  box-shadow: 0 0 18px rgba(45, 35, 22, 0.45);
+}
+
+/* Printed Book Typography Columns on the Foreground Pages */
+.page-printed-columns {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #2b261f;
+}
+
+.printed-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.printed-chap-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8c3b20;
+}
+
+.printed-Metric-pill,
+.printed-metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.11);
+  color: #991b1b;
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+.printed-park-title {
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #1c2e24;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.printed-park-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #5c5346;
+  margin: 0;
+}
+
+.printed-book-paragraph {
+  font-size: 0.75rem;
+  line-height: 1.46;
+  color: #3a332a;
+  margin: 2px 0 0;
+  text-align: justify;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.printed-eco-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #1b4332;
+}
+
+.printed-ecosystem-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #6b5b47;
+}
+
+.printed-handwriting-quote {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #5c4033;
+  margin: 0;
+}
+
+.printed-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.printed-species-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.printed-sp-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(27, 67, 50, 0.1);
+  border: 1px solid rgba(27, 67, 50, 0.2);
+  color: #1b4332;
+  font-size: 0.64rem;
+  font-weight: 700;
+}
+
+.printed-donate-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: none;
+  background: #a83820;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(168, 56, 32, 0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.printed-donate-cta:hover {
+  background: #1b4332;
+  transform: translateY(-1px);
+}
+
+.printed-page-folio {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #8c7f6c;
+  margin-top: 2px;
+}
+
+.printed-page-folio.folio-right {
+  text-align: right;
+}
+
+/* Turning Paper Sheet Animation Overlay */
+.popup-turning-sheet {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 50%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #e5dac5 0%, #fdfaf3 45%, #f5eedf 100%);
+  border: 1px solid #d4c6ae;
+  border-radius: 0 8px 4px 0;
+  z-index: 45;
+  box-shadow: -14px 10px 32px rgba(0, 0, 0, 0.26);
+  pointer-events: none;
+}
+
+.turning-sheet-lines {
+  margin: 70px 32px 24px;
+  height: 90px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(92, 80, 63, 0.14) 0px,
+    rgba(92, 80, 63, 0.14) 3px,
+    transparent 3px,
+    transparent 12px
+  );
+}
+
+/* Field Documentation Photo Modal */
+.popup-gallery-modal {
+  width: min(740px, 92vw);
+  background: #fdfaf3;
+  border-radius: 22px;
+  padding: 24px;
+  border: 2px solid #dfd3bc;
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.45);
+}
+
+.popup-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.popup-modal-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #a83820;
+}
+
+.popup-modal-header h4 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: #1b4332;
+  margin: 2px 0 0;
+}
+
+.popup-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #d5c7b2;
+  background: #f4ebd9;
+  color: #2b261f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.popup-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.popup-modal-photo-card {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5dac3;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.popup-modal-photo-card img {
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+  display: block;
+}
+
+.popup-modal-photo-card span {
+  display: block;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2b261f;
+}
+
+/* Responsive Adjustments for 3D Pop-Up Book */
+@media (max-width: 980px) {
+  .popup-open-book-assembly {
+    width: 740px;
+    height: 500px;
+  }
+  .popup-diorama-rig {
+    width: 700px;
+    height: 310px;
+    top: 8px;
+  }
+  .popup-book-table-base {
+    width: 720px;
+    height: 245px;
+  }
+}
+
+@media (max-width: 768px) {
+  .popup-book-3d-stage {
+    min-height: 520px;
+  }
+  .popup-open-book-assembly {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    padding-top: 230px;
+  }
+  .popup-diorama-rig {
+    width: 100%;
+    height: 240px;
+    top: 0;
+  }
+  .popup-floating-badges {
+    top: -10px;
+    left: 6px;
+    right: 6px;
+  }
+  .popup-tag-chip,
+  .popup-photo-trigger-btn {
+    font-size: 0.66rem;
+    padding: 4px 10px;
+  }
+  .popup-book-table-base {
+    width: 100%;
+    height: auto;
+    transform: rotateX(8deg);
+  }
+  .popup-open-pages-spread {
+    flex-direction: column;
+    height: auto;
+    gap: 8px;
+  }
+  .popup-center-gutter {
+    display: none;
+  }
+  .page-wing-left,
+  .page-wing-right {
+    border-radius: 10px;
+    transform: none;
+    padding: 36px 18px 14px;
+  }
+  .popup-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

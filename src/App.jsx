@@ -50,7 +50,7 @@ export default function App() {
     );
   };
 
-  // Automatic section tracking & smooth scroll-focus per session
+  // Automatic section tracking per halaman
   useEffect(() => {
     const sections = [
       { id: 'section-beranda', key: 'beranda' },
@@ -65,7 +65,7 @@ export default function App() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+          if (entry.isIntersecting) {
             const match = sections.find((s) => s.id === entry.target.id);
             if (match) {
               setActiveNav(match.key);
@@ -73,7 +73,7 @@ export default function App() {
           }
         });
       },
-      { threshold: [0.4, 0.65] }
+      { rootMargin: '-40% 0px -40% 0px', threshold: 0 }
     );
 
     sections.forEach(({ id }) => {
@@ -81,30 +81,8 @@ export default function App() {
       if (el) observer.observe(el);
     });
 
-    // Smooth magnetic scroll focus when user stops scrolling near a section top
-    let scrollTimeout = null;
-    const handleScrollEnd = () => {
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        const vh = window.innerHeight;
-        for (const { id } of sections) {
-          const el = document.getElementById(id);
-          if (!el) continue;
-          const rect = el.getBoundingClientRect();
-          // If section top is within 28% of viewport top, smoothly focus it
-          if (Math.abs(rect.top) > 8 && Math.abs(rect.top) < vh * 0.28) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            break;
-          }
-        }
-      }, 140);
-    };
-
-    window.addEventListener('scroll', handleScrollEnd, { passive: true });
     return () => {
       observer.disconnect();
-      window.removeEventListener('scroll', handleScrollEnd);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
     };
   }, []);
 
@@ -346,8 +324,28 @@ export default function App() {
       {/* Sesi 6: Halaman Contact (Form Kontak, Pengaduan, Info Saluran & FAQ) */}
       <ContactSection />
 
+      {/* Indikator Stop-Motion Batas Halaman di Sisi Kanan */}
+      <nav className="page-stop-dots" aria-label="Navigasi Cepat Batas Halaman">
+        {[
+          ...navItems,
+          { key: 'donasi', label: 'AKSI NYATA', target: 'section-donasi' }
+        ].map((page, idx) => (
+          <button
+            key={page.key}
+            type="button"
+            onClick={() => scrollToSection(page.target, page.key)}
+            className={`page-dot-item ${activeNav === page.key ? 'active' : ''}`}
+            title={`Halaman ${idx + 1}: ${page.label}`}
+            aria-label={`Ke ${page.label}`}
+          >
+            <span className="page-dot-label">{page.label}</span>
+            <span className="page-dot-bullet" />
+          </button>
+        ))}
+      </nav>
+
       {/* Sesi 7: Halaman Aksi Nyata (Donasi Terverifikasi & Relawan - Dipertahankan) */}
-      <div className="snap-section">
+      <div className="snap-section last-snap-section">
         <DonationPage
           campaigns={campaigns}
           selectedCampaignId={selectedCampaignId}
@@ -355,22 +353,22 @@ export default function App() {
           donors={donors}
           onSubmitDonation={handleDonationSubmit}
         />
-      </div>
 
-      {/* Footer Singkat */}
-      <footer className="site-footer">
-        <div className="section-container footer-row">
-          <div className="brand-logo footer-brand">
-            <span className="brand-icon-circle">
-              <Globe2 size={16} />
-            </span>
-            <span className="brand-text">ALAMKUY</span>
+        {/* Footer Singkat */}
+        <footer className="site-footer">
+          <div className="section-container footer-row">
+            <div className="brand-logo footer-brand">
+              <span className="brand-icon-circle">
+                <Globe2 size={16} />
+              </span>
+              <span className="brand-text">ALAMKUY</span>
+            </div>
+            <p className="footer-note">
+              Portal Edukasi Lingkungan & Isu Global. Data bersumber dari IPCC, UNEP, IUCN, dan KLHK.
+            </p>
           </div>
-          <p className="footer-note">
-            Portal Edukasi Lingkungan & Isu Global. Data bersumber dari IPCC, UNEP, IUCN, dan KLHK.
-          </p>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
       {/* Modal Ringkas */}
       <AnimatePresence>

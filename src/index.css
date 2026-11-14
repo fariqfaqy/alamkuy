@@ -2370,22 +2370,47 @@ textarea {
    SMOOTH SECTION SCROLL FOCUS & SNAP PER SESSION
    ========================================================= */
 html {
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
   scroll-padding-top: 0px;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+}
+
+@media (max-width: 1024px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
 }
 
 .snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  min-height: 100dvh;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.last-snap-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100dvh;
 }
 
 .hero-viewport {
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 600px;
 }
 
 .fan-deck-section {
-  min-height: 100vh;
-  padding: 96px 28px 0;
+  min-height: 100dvh;
+  padding: 82px 24px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2405,15 +2430,91 @@ html {
 }
 
 .fan-cards-stage {
-  height: 410px;
+  height: clamp(310px, 46vh, 410px);
   align-items: flex-end;
   padding-bottom: 12px;
+  overscroll-behavior: contain;
 }
 
 .parks-section,
 .donation-section {
-  min-height: 100vh;
-  padding-top: 96px;
+  min-height: 100dvh;
+  padding: 84px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Right-Side Stop-Motion Page Indicator Dots */
+.page-stop-dots {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.page-dot-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.page-dot-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  background: rgba(11, 28, 20, 0.85);
+  padding: 3px 9px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.page-dot-item:hover .page-dot-label,
+.page-dot-item.active .page-dot-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-dot-item:not(:hover):not(.active) .page-dot-label {
+  opacity: 0;
+}
+
+.page-dot-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(19, 42, 31, 0.45);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+  transition: all 0.25s ease;
+}
+
+.page-dot-item.active .page-dot-bullet {
+  height: 24px;
+  background: #16a34a;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px rgba(22, 163, 74, 0.65);
+}
+
+@media (max-width: 900px) {
+  .page-stop-dots {
+    display: none;
+  }
 }
 
 /* Adaptive Light Navbar when scrolled to bright sections */
@@ -3828,7 +3929,11 @@ html {
    HALAMAN ABOUT (TENTANG ALAMKUY, VISI MISI & 4 PILAR)
    ========================================================= */
 .about-section {
-  padding: 100px 0 110px;
+  min-height: 100dvh;
+  padding: 86px 0 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: linear-gradient(180deg, var(--bg-page) 0%, var(--bg-section-alt) 50%, var(--bg-page) 100%);
   position: relative;
   z-index: 2;
@@ -4020,7 +4125,11 @@ html {
    HALAMAN KONTEN (ARTIKEL & GALERI MULTIMEDIA)
    ========================================================= */
 .artikel-galeri-section {
-  padding: 100px 0 110px;
+  min-height: 100dvh;
+  padding: 84px 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: var(--bg-page);
   position: relative;
   z-index: 2;
@@ -4082,8 +4191,8 @@ html {
 .globe-3d-stage {
   position: relative;
   width: 100%;
-  height: 600px;
-  margin: 14px 0 10px;
+  height: clamp(380px, 54vh, 550px);
+  margin: 10px 0 8px;
   perspective: 1300px;
   perspective-origin: 50% 50%;
   display: flex;
@@ -4091,6 +4200,7 @@ html {
   justify-content: center;
   user-select: none;
   touch-action: none;
+  overscroll-behavior: contain;
   cursor: grab;
   overflow: visible;
 }
@@ -4855,7 +4965,11 @@ html {
    HALAMAN CONTACT (FORM PESAN, SALURAN RESMI & FAQ)
    ========================================================= */
 .contact-section {
-  padding: 100px 0 110px;
+  min-height: 100dvh;
+  padding: 86px 0 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: linear-gradient(180deg, var(--bg-section-alt) 0%, var(--bg-page) 100%);
   position: relative;
   z-index: 2;
@@ -5210,13 +5324,17 @@ a.channel-item:hover {
    3D POP-UP DIORAMA BOOK (ATLAS 3D BUKU POP-UP KERAJINAN KERTAS)
    ========================================================= */
 .popup-book-section {
+  min-height: 100dvh;
   background: radial-gradient(circle at 50% 38%, #dce4e8 0%, #96a5b0 58%, #6d7c88 100%);
-  padding: 86px 20px 36px;
+  padding: 80px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .popup-atlas-container {
   max-width: 1180px;
-  gap: 14px;
+  gap: 8px;
 }
 
 .popup-book-section .journal-title {
@@ -6029,7 +6147,7 @@ a.channel-item:hover {
   position: relative;
   width: 100%;
   max-width: 1020px;
-  height: 520px;
+  height: clamp(320px, 46vh, 480px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6041,6 +6159,7 @@ a.channel-item:hover {
   height: 100%;
   cursor: grab;
   touch-action: none;
+  overscroll-behavior: contain;
 }
 
 .popup-webgl-canvas-wrap:active {
@@ -6058,7 +6177,7 @@ a.channel-item:hover {
   gap: 6px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(253, 250, 243, 0.85);
+  background: rgba(253, 250, 243, 0.88);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(25, 48, 38, 0.16);
   color: #1e352a;
@@ -6074,33 +6193,33 @@ a.channel-item:hover {
   max-width: 1020px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-top: -12px;
+  gap: 14px;
+  margin-top: -8px;
 }
 
 .popup-info-card {
   background: rgba(253, 250, 243, 0.92);
   backdrop-filter: blur(8px);
   border: 1.5px solid #dfd3bc;
-  border-radius: 18px;
-  padding: 16px 20px;
+  border-radius: 16px;
+  padding: 13px 18px;
   box-shadow: 0 10px 26px rgba(15, 25, 20, 0.12);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .popup-info-title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.18rem;
   font-weight: 800;
   color: #1b4332;
   margin: 0;
 }
 
 .popup-info-desc {
-  font-size: 0.82rem;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  line-height: 1.48;
   color: #362f26;
   margin: 2px 0 0;
 }
@@ -6111,17 +6230,96 @@ a.channel-item:hover {
   color: #d97706;
 }
 
+/* Laptop / Compact Height Screen Refinement (1280x720, 1366x768) */
+@media (max-height: 800px) and (min-width: 901px) {
+  .about-section,
+  .artikel-galeri-section,
+  .contact-section,
+  .donation-section {
+    padding-top: 76px;
+    padding-bottom: 24px;
+  }
+  .section-heading {
+    font-size: clamp(1.65rem, 2.8vw, 2.3rem);
+    margin-bottom: 8px;
+  }
+  .section-subtext {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  .about-story-grid {
+    margin-top: 22px;
+    gap: 20px;
+  }
+  .about-pillars-grid {
+    margin-top: 24px;
+    gap: 16px;
+  }
+  .about-metrics-bar {
+    margin-top: 24px;
+    padding: 18px 24px;
+  }
+  .popup-book-section {
+    padding-top: 74px;
+    padding-bottom: 14px;
+  }
+  .popup-book-section .journal-title {
+    font-size: 1.75rem;
+  }
+  .popup-chapter-tabs {
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .popup-chapter-tab {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+  }
+  .popup-info-card {
+    padding: 10px 14px;
+  }
+}
+
+/* Tablet & Mobile Responsive */
 @media (max-width: 768px) {
+  .about-section,
+  .artikel-galeri-section,
+  .contact-section,
+  .donation-section,
+  .popup-book-section {
+    padding: 78px 14px 28px;
+    min-height: auto;
+  }
+  .fan-deck-section {
+    padding: 78px 14px 18px;
+    min-height: 100dvh;
+  }
+  .fan-cards-stage {
+    height: 310px;
+  }
   .popup-webgl-stage-box {
-    height: 360px;
+    height: 320px;
   }
   .popup-orbit-hint-pill {
-    font-size: 0.64rem;
+    font-size: 0.63rem;
     padding: 4px 10px;
+    max-width: 92vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .popup-info-deck {
     grid-template-columns: 1fr;
-    margin-top: 4px;
+    margin-top: 6px;
+  }
+  .popup-chapter-tabs {
+    gap: 5px;
+  }
+  .popup-chapter-tab {
+    padding: 4px 9px;
+    font-size: 0.68rem;
+  }
+  .content-toolbar-row {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
